@@ -5,19 +5,20 @@ Status `active` means the hook exists in the repository. Status `proposed` means
 
 | Hook | Status | Trigger | Command | Scope | Failure behavior | Evidence |
 |---|---|---|---|---|---|---|
-| husky-pre-commit | active | pre-commit | `npx lint-staged` | Git staged files | block | `.husky/pre-commit` |
-| pre-push-unit-tests | proposed | pre-push | `bun run test` | Repository root before push | block | `package.json` |
-| pre-push-format-check | proposed | pre-push | `bun run format:check` | Repository root before push | block | `package.json`, `.github/workflows/lint.yml` |
-| agent-after-edit-format | proposed | agent: after edit | `bun run format:check` | After agent edits to tracked source files | report | `package.json`, `.github/workflows/lint.yml` |
+| husky-pre-commit-lint-staged | active | pre-commit | `npx lint-staged` | Git staged files | block | `.husky/pre-commit`, `package.json` |
+| pre-push-format-check | proposed | pre-push | `bun run format:check` | Repository (TypeScript, HTML, CSS, JSON, Markdown per Prettier glob) | block | `package.json`, `.github/workflows/lint.yml` |
+| pre-push-unit-tests | proposed | pre-push | `bun run test` | Vitest unit test suite | block | `package.json` |
+| agent-after-edit-format-check | proposed | agent: after edit | `bun run format:check` | Same paths as format:check script | report | `package.json`, `.github/workflows/lint.yml` |
 
 ## Verification commands
 
 | Command | Purpose | Status | Source |
 |---|---|---|---|
-| `bun run format:check` | Verify Prettier formatting on ts, html, css, json, md | documented | `package.json, .github/workflows/lint.yml` |
+| `bun run format:check` | Verify Prettier formatting without writing files | documented | `package.json, .github/workflows/lint.yml` |
 | `bun run test` | Run Vitest unit tests | documented | `package.json` |
 | `bun run test:coverage` | Run Vitest with coverage | documented | `package.json` |
-| `bun run test:e2e` | Run Playwright e2e tests excluding @security | documented | `package.json, .github/workflows/playwright.yml` |
-| `bun run test:e2e:security` | Run Playwright security-tagged tests | documented | `package.json, .github/workflows/security-tests.yml` |
 | `bun run build` | Production Angular build | documented | `package.json, .github/workflows/deploy.yml` |
+| `bun run test:e2e` | Playwright E2E tests excluding @security tag | documented | `package.json, .github/workflows/playwright.yml` |
+| `bun run test:e2e:security` | Playwright E2E tests tagged @security | documented | `package.json, .github/workflows/security-tests.yml` |
+| `bun run setup` | Install dependencies (bun install) | documented | `README.md, package.json` |
 <!-- init-agent:end -->

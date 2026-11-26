@@ -1,7 +1,7 @@
 # INIT report
 
-- Generated: 2026-11-26 23:12 UTC
-- Run: `0ce8a1a3c5af`
+- Generated: 2026-11-26 23:19 UTC
+- Run: `138014d65bc7`
 - Repository: https://github.com/shira-ozana/angular-realworld-example-app
 - Base commit: `2c8c837809b5877b0f3759a57a454ac52c4b207e` (ref `main`) · branch `shipAI`
 
@@ -9,41 +9,49 @@
 
 Requirements and Architect start with these files:
 
-- [AGENTS.md](../../AGENTS.md): Primary entry for agent-assisted work: component map (root SPA, realworld conformance pack), links to CLAUDE.md and human guidance, verification commands (format, Vitest, Playwright, build), and pointers to local AGENTS.md and skills.
-- [ARCHITECTURE.md](../../ARCHITECTURE.md): System map: Angular implementation under src/app as system under test; realworld tree for OpenAPI, Bruno/Hurl contract tests, shared Playwright E2E, Astro docs, and assets; data flow from SPA to API_BASE and test mode flags.
-- [RULES.md](../../RULES.md): Binding agent rules: cite evidence paths, do not change application code when planning harness work, preserve CLAUDE.md and realworld contributor guidance, match existing conventions in src/app and realworld/specs/e2e.
+- [AGENTS.md](../../AGENTS.md): Primary entry for agent-assisted work: component map, links to ARCHITECTURE.md and RULES.md, npm/Bun scripts, and pointers to skills under skills/*/SKILL.md plus local realworld/AGENTS.md and src/app/AGENTS.md.
+- [ARCHITECTURE.md](../../ARCHITECTURE.md): Describe system components (root toolchain, realworld conformance pack, src/app Angular SPA), entry points, interfaces, dependencies, and data flow with path citations for Requirements and Architect.
+- [RULES.md](../../RULES.md): Binding agent constraints for this repo: harness-only edits, preserve human guidance, cite evidence, verification command expectations, and alignment with RealWorld UI/API contracts.
+
+> This repository is an Angular Conduit (RealWorld) single-page application under src/app that implements the social blogging spec against a REST backend. The root uses Bun as the package manager, Angular 21 for the UI, Vitest for unit tests, and Playwright for shared E2E specs vendored from the realworld conformance pack. Structure splits the runnable SPA (src/app) from realworld (OpenAPI, Playwright suite, Bruno/Hurl API tests, and Astro documentation).
 
 ## Scan scope
 
-- Files scanned: 159 · components: 13 · analyzed: 13
+- Files scanned: 175 · components: 13 · analyzed: 13
 - Include: all · exclude: none
-- Files not sent to the model (context budget): 6
+- Files not sent to the model (context budget): 18
 - Files sent truncated: 9
 
 ## Harness map
 
 | File | Scope | Purpose | Result |
 |---|---|---|---|
-| [AGENTS.md](../../AGENTS.md) | Repository root | Primary entry for agent-assisted work: component map (root SPA, realworld conformance pack), links to CLAUDE.md and human guidance, verification commands (format, Vitest, Playwright, build), and pointers to local AGENTS.md and skills. | created |
-| [ARCHITECTURE.md](../../ARCHITECTURE.md) | Repository root | System map: Angular implementation under src/app as system under test; realworld tree for OpenAPI, Bruno/Hurl contract tests, shared Playwright E2E, Astro docs, and assets; data flow from SPA to API_BASE and test mode flags. | created |
-| [RULES.md](../../RULES.md) | Repository root | Binding agent rules: cite evidence paths, do not change application code when planning harness work, preserve CLAUDE.md and realworld contributor guidance, match existing conventions in src/app and realworld/specs/e2e. | created |
-| [GUIDELINES.md](../../GUIDELINES.md) | Repository root | Document multiple valid patterns: E2E gating via TEST_MODE, BROWSER_API, and EXTERNAL_API; non-security vs @security Playwright runs; API verification via Bruno vs Hurl; Prettier and lint-staged on commit. | created |
-| [TESTING.md](../../TESTING.md) | Repository root | Consolidate verification workflows: bun run test (Vitest), test:e2e and test:e2e:security, production build; link skills run-playwright-e2e-tests, run-vitest-unit-tests, and realworld API/doc skills without duplicating SELECTORS.md. | created |
-| [DOMAIN.md](../../DOMAIN.md) | Repository root | Conduit/RealWorld vocabulary for Requirements and Architect: articles, slugs, favorites, profiles, follow, jwtToken, Global Feed vs Your Feed, aligned with docs and E2E flows. | created |
-| [CONTRACTS.md](../../CONTRACTS.md) | Repository root | Index REST and UI contracts: OpenAPI base and Token auth, SPA routes and DOM selectors, localStorage jwtToken and window.__conduit_debug__; point implementers to canonical files under realworld/specs. | created |
-| [realworld/AGENTS.md](../../realworld/AGENTS.md) | realworld | Local contract for the conformance pack: docs dev/build, API Bruno and Hurl runners, hurl-to-bruno check, E2E spec layout and helpers; link realworld/CLAUDE.md and CONTRIBUTING.md; skills run-realworld-docs-dev, run-api-contract-tests-bruno, add-e2e-domain-spec. | created |
-| [src/app/AGENTS.md](../../src/app/AGENTS.md) | src/app | Angular implementation guidance: routes and features (article, profile, settings), colocated Vitest specs, compliance with realworld/specs/e2e/SELECTORS.md; skill run-vitest-unit-tests and run-playwright-e2e-tests for verification. | created |
-| [skills/run-playwright-e2e-tests/SKILL.md](../../skills/run-playwright-e2e-tests/SKILL.md) | realworld/specs/e2e, playwright.config.ts, package.json | Skill: Run the shared RealWorld Playwright suite against the SPA implementation, excluding tests tagged for security-only runs. | created |
-| [skills/run-playwright-security-e2e-tests/SKILL.md](../../skills/run-playwright-security-e2e-tests/SKILL.md) | realworld/specs/e2e, package.json | Skill: Run only Playwright specs tagged @security (for example xss-security.spec.ts in the test inventory). | created |
-| [skills/add-e2e-domain-spec/SKILL.md](../../skills/add-e2e-domain-spec/SKILL.md) | realworld/specs/e2e/*.spec.ts, realworld/specs/e2e/helpers, realworld/specs/e2e/SELECTORS.md | Skill: Add or extend end-to-end coverage for a Conduit feature area (articles, authentication, comments) using shared helpers a | created |
-| [skills/add-spa-route-mock-test/SKILL.md](../../skills/add-spa-route-mock-test/SKILL.md) | realworld/specs/e2e/articles.spec.ts, realworld/specs/e2e/comments.spec.ts, realworld/specs/e2e/helpers/config.ts | Skill: Verify the frontend treats any 2xx DELETE response as success by mocking the browser response while still hitting the re | created |
-| [skills/run-vitest-unit-tests/SKILL.md](../../skills/run-vitest-unit-tests/SKILL.md) | src/app, package.json | Skill: Run Angular service unit tests colocated under src/app (auth, article, profile services). | created |
-| [skills/run-realworld-docs-dev/SKILL.md](../../skills/run-realworld-docs-dev/SKILL.md) | realworld/docs | Skill: Preview or edit the RealWorld Starlight documentation site under realworld/docs. | created |
-| [HOOKS.md](../../HOOKS.md) | repository | Active and proposed hooks, verification commands | created |
+| [AGENTS.md](../../AGENTS.md) | Repository root | Primary entry for agent-assisted work: component map, links to ARCHITECTURE.md and RULES.md, npm/Bun scripts, and pointers to skills under skills/*/SKILL.md plus local realworld/AGENTS.md and src/app/AGENTS.md. | updated (replaced the generated block; human content kept) |
+| [ARCHITECTURE.md](../../ARCHITECTURE.md) | Repository root | Describe system components (root toolchain, realworld conformance pack, src/app Angular SPA), entry points, interfaces, dependencies, and data flow with path citations for Requirements and Architect. | updated (replaced the generated block; human content kept) |
+| [RULES.md](../../RULES.md) | Repository root | Binding agent constraints for this repo: harness-only edits, preserve human guidance, cite evidence, verification command expectations, and alignment with RealWorld UI/API contracts. | updated (replaced the generated block; human content kept) |
+| [GUIDELINES.md](../../GUIDELINES.md) | Repository root | Document multiple valid patterns where evidence shows branches: E2E BROWSER_API vs EXTERNAL_API (realworld/specs/e2e/helpers/config.ts), shared Playwright specs vs local Vitest, and Angular feature layout under src/app. | updated (replaced the generated block; human content kept) |
+| [CONTRACTS.md](../../CONTRACTS.md) | Repository root | Summarize REST contract (OpenAPI) and frontend selector/routing contract for Conduit conformance; link to canonical files rather than duplicating schemas. | updated (replaced the generated block; human content kept) |
+| [DOMAIN.md](../../DOMAIN.md) | Repository root | RealWorld / Conduit business vocabulary (articles, profiles, favorites, feed, tags) for Requirements agents. | kept |
+| [TESTING.md](../../TESTING.md) | Repository root | Verification commands and when to use them: bun run test (Vitest), test:e2e, test:e2e:security, format:check, build; link to skills and note CI coverage gaps. | updated (replaced the generated block; human content kept) |
+| [realworld/AGENTS.md](../../realworld/AGENTS.md) | realworld | Local contract for the conformance pack: docs dev, API tests (Bruno/Hurl), bruno-check, E2E spec layout; when to read SELECTORS.md and skills run-realworld-docs-dev. | updated (replaced the generated block; human content kept) |
+| [src/app/AGENTS.md](../../src/app/AGENTS.md) | src/app | Angular SPA local guidance: routing, features (article, profile, settings), core auth/interceptors, unit test locations, and conformance checks via shared Playwright suite. | updated (replaced the generated block; human content kept) |
+| [skills/run-vitest-unit-tests/SKILL.md](../../skills/run-vitest-unit-tests/SKILL.md) | src/app/**/*.spec.ts, package.json, vitest.config.ts | Skill: Run Angular service and component unit tests under src/app with Vitest from the repository root. | updated (replaced the generated block; human content kept) |
+| [skills/run-realworld-docs-dev/SKILL.md](../../skills/run-realworld-docs-dev/SKILL.md) | realworld/docs, realworld/docs/package.json, realworld/docs/astro.config.mjs | Skill: Start the Starlight documentation site for RealWorld specifications and community content in realworld/docs. | updated (replaced the generated block; human content kept) |
+| [skills/run-playwright-e2e-tests/SKILL.md](../../skills/run-playwright-e2e-tests/SKILL.md) | realworld/specs/e2e, playwright.config.ts, package.json | Skill: Run the shared RealWorld Playwright suite against the SPA implementation, excluding tests tagged @security. | updated (replaced the generated block; human content kept) |
+| [skills/run-playwright-security-e2e-tests/SKILL.md](../../skills/run-playwright-security-e2e-tests/SKILL.md) | realworld/specs/e2e, package.json | Skill: Run only Playwright specs tagged @security (for example xss-security.spec.ts). | updated (replaced the generated block; human content kept) |
+| [skills/add-e2e-domain-spec/SKILL.md](../../skills/add-e2e-domain-spec/SKILL.md) | realworld/specs/e2e/*.spec.ts, realworld/specs/e2e/helpers, realworld/specs/e2e/SELECTORS.md | Skill: Add or extend end-to-end coverage for a Conduit feature area (articles, authentication, comments) using shared helpers a | updated (replaced the generated block; human content kept) |
+| [skills/add-spa-route-mock-test/SKILL.md](../../skills/add-spa-route-mock-test/SKILL.md) | realworld/specs/e2e/articles.spec.ts, realworld/specs/e2e/comments.spec.ts, realworld/specs/e2e/helpers/config.ts | Skill: Verify the frontend treats any 2xx DELETE response as success by mocking the browser response while still hitting the re | updated (replaced the generated block; human content kept) |
+| [skills/add-e2e-api-error-test/SKILL.md](../../skills/add-e2e-api-error-test/SKILL.md) | realworld/specs/e2e/error-handling.spec.ts, realworld/specs/e2e/helpers/config.ts | Skill: Add Playwright cases that assert the SPA shows .error-messages and remains usable when API returns 400, 401, 403, 404, o | created |
+| [skills/add-e2e-navigation-social-spec/SKILL.md](../../skills/add-e2e-navigation-social-spec/SKILL.md) | realworld/specs/e2e/navigation.spec.ts, realworld/specs/e2e/social.spec.ts, realworld/specs/e2e/settings.spec.ts, realworld/specs/e2e/helpers/api.ts, realworld/specs/e2e/helpers/setup.ts, realworld/specs/e2e/helpers/profile.ts | Skill: Add E2E tests for feeds, tag filters, pagination, follow/unfollow, and settings flows that branch on EXTERNAL_API vs UI  | created |
+| [skills/run-hurl-api-tests/SKILL.md](../../skills/run-hurl-api-tests/SKILL.md) | realworld/specs/api/run-api-tests-hurl.sh, realworld/specs/api/hurl, realworld/specs/api/openapi.yml | Skill: Verify a Conduit REST backend against the canonical Hurl suite in realworld/specs/api/hurl. | created |
+| [skills/run-bruno-api-tests/SKILL.md](../../skills/run-bruno-api-tests/SKILL.md) | realworld/specs/api/run-api-tests-bruno.sh, realworld/specs/api/bruno | Skill: Run the generated Bruno API collection against a configurable Conduit backend host. | created |
+| [skills/check-bruno-hurl-sync/SKILL.md](../../skills/check-bruno-hurl-sync/SKILL.md) | realworld/specs/api/hurl-to-bruno.js, realworld/specs/api/bruno, realworld/specs/api/hurl, realworld/Makefile | Skill: Regenerate or verify the Bruno collection stays synchronized with Hurl sources before commit or in CI. | created |
+| [skills/run-playwright-single-spec/SKILL.md](../../skills/run-playwright-single-spec/SKILL.md) | realworld/specs/e2e, package.json | Skill: Run one Playwright spec file or a filtered subset during iterative E2E development. | created |
+| [HOOKS.md](../../HOOKS.md) | repository | Active and proposed hooks, verification commands | updated (replaced the generated block; human content kept) |
 
 ## Files written
 
-Markdown files created or updated: **16** (this report is not counted).
+Markdown files created or updated: **21** (this report is not counted).
 
 ```text
 ├── AGENTS.md
@@ -57,13 +65,25 @@ Markdown files created or updated: **16** (this report is not counted).
 ├── realworld/
 │   └── AGENTS.md
 ├── skills/
+│   ├── add-e2e-api-error-test/
+│   │   └── SKILL.md
 │   ├── add-e2e-domain-spec/
 │   │   └── SKILL.md
+│   ├── add-e2e-navigation-social-spec/
+│   │   └── SKILL.md
 │   ├── add-spa-route-mock-test/
+│   │   └── SKILL.md
+│   ├── check-bruno-hurl-sync/
+│   │   └── SKILL.md
+│   ├── run-bruno-api-tests/
+│   │   └── SKILL.md
+│   ├── run-hurl-api-tests/
 │   │   └── SKILL.md
 │   ├── run-playwright-e2e-tests/
 │   │   └── SKILL.md
 │   ├── run-playwright-security-e2e-tests/
+│   │   └── SKILL.md
+│   ├── run-playwright-single-spec/
 │   │   └── SKILL.md
 │   ├── run-realworld-docs-dev/
 │   │   └── SKILL.md
@@ -76,27 +96,28 @@ Markdown files created or updated: **16** (this report is not counted).
 
 ## Skills
 
-- [run-playwright-e2e-tests](../../skills/run-playwright-e2e-tests/SKILL.md) (local): Run the shared RealWorld Playwright suite against the SPA implementation, excluding tests tagged for security-only runs.
-- [run-playwright-security-e2e-tests](../../skills/run-playwright-security-e2e-tests/SKILL.md) (local): Run only Playwright specs tagged @security (for example xss-security.spec.ts in the test inventory).
+- [run-vitest-unit-tests](../../skills/run-vitest-unit-tests/SKILL.md) (local): Run Angular service and component unit tests under src/app with Vitest from the repository root.
+- [run-realworld-docs-dev](../../skills/run-realworld-docs-dev/SKILL.md) (local): Start the Starlight documentation site for RealWorld specifications and community content in realworld/docs.
+- [run-playwright-e2e-tests](../../skills/run-playwright-e2e-tests/SKILL.md) (local): Run the shared RealWorld Playwright suite against the SPA implementation, excluding tests tagged @security.
+- [run-playwright-security-e2e-tests](../../skills/run-playwright-security-e2e-tests/SKILL.md) (local): Run only Playwright specs tagged @security (for example xss-security.spec.ts).
 - [add-e2e-domain-spec](../../skills/add-e2e-domain-spec/SKILL.md) (local): Add or extend end-to-end coverage for a Conduit feature area (articles, authentication, comments) using shared helpers and SELECTORS.md contracts.
 - [add-spa-route-mock-test](../../skills/add-spa-route-mock-test/SKILL.md) (local): Verify the frontend treats any 2xx DELETE response as success by mocking the browser response while still hitting the real backend (BROWSER_API mode only).
-- [run-vitest-unit-tests](../../skills/run-vitest-unit-tests/SKILL.md) (local): Run Angular service unit tests colocated under src/app (auth, article, profile services).
-- [run-realworld-docs-dev](../../skills/run-realworld-docs-dev/SKILL.md) (local): Preview or edit the RealWorld Starlight documentation site under realworld/docs.
-- `run-api-contract-tests-bruno` (needs evidence): missing realworld/specs/api/run-api-tests-bruno.sh full script, realworld/specs/api/README.md operator instructions, realworld/Makefile API test targets
-- `run-api-contract-tests-hurl` (needs evidence): missing Sample .hurl file contents, realworld/specs/api/run-api-tests-hurl.sh full script
-- `sync-hurl-to-bruno` (needs evidence): missing realworld/specs/api/hurl-to-bruno.js full generate and --check implementation, realworld/Makefile bruno-check target
-- `add-e2e-helper-module` (needs evidence): missing realworld/specs/e2e/helpers/auth.ts, realworld/specs/e2e/helpers/articles.ts, realworld/specs/e2e/helpers/comments.ts, realworld/specs/e2e/helpers/profile.ts, realworld/specs/e2e/helpers/setup.ts, realworld/specs/e2e/helpers/debug.ts
-- `add-angular-service-unit-test` (needs evidence): missing Excerpt of any src/app/**/*.service.spec.ts showing imports, TestBed, and assertion style, Vitest config file path and Angular test setup
-- `implement-conduit-debug-interface` (needs evidence): missing realworld/specs/e2e/helpers/debug.ts, Application source that sets window.__conduit_debug__
+- [add-e2e-api-error-test](../../skills/add-e2e-api-error-test/SKILL.md) (local): Add Playwright cases that assert the SPA shows .error-messages and remains usable when API returns 400, 401, 403, 404, or malformed JSON via page.route() (BROWSER_API mode).
+- [add-e2e-navigation-social-spec](../../skills/add-e2e-navigation-social-spec/SKILL.md) (local): Add E2E tests for feeds, tag filters, pagination, follow/unfollow, and settings flows that branch on EXTERNAL_API vs UI or setup helpers.
+- [run-hurl-api-tests](../../skills/run-hurl-api-tests/SKILL.md) (local): Verify a Conduit REST backend against the canonical Hurl suite in realworld/specs/api/hurl.
+- [run-bruno-api-tests](../../skills/run-bruno-api-tests/SKILL.md) (local): Run the generated Bruno API collection against a configurable Conduit backend host.
+- [check-bruno-hurl-sync](../../skills/check-bruno-hurl-sync/SKILL.md) (local): Regenerate or verify the Bruno collection stays synchronized with Hurl sources before commit or in CI.
+- [run-playwright-single-spec](../../skills/run-playwright-single-spec/SKILL.md) (local): Run one Playwright spec file or a filtered subset during iterative E2E development.
+- `add-vitest-service-spec` (needs evidence): missing No Vitest spec file excerpt in evidence for step-by-step structure (imports, providers, assertions)., vitest.config.ts path and focused-test CLI conventions not quoted in inventory.
 
 ## Hooks
 
 | Hook | Status | Trigger | Command | Failure behavior |
 |---|---|---|---|---|
-| husky-pre-commit | active | pre-commit | `npx lint-staged` | block |
-| pre-push-unit-tests | proposed | pre-push | `bun run test` | block |
+| husky-pre-commit-lint-staged | active | pre-commit | `npx lint-staged` | block |
 | pre-push-format-check | proposed | pre-push | `bun run format:check` | block |
-| agent-after-edit-format | proposed | agent: after edit | `bun run format:check` | report |
+| pre-push-unit-tests | proposed | pre-push | `bun run test` | block |
+| agent-after-edit-format-check | proposed | agent: after edit | `bun run format:check` | report |
 
 ## Commands
 
@@ -105,70 +126,88 @@ Markdown files created or updated: **16** (this report is not counted).
 | `bun run format:check` | documented | `package.json, .github/workflows/lint.yml` |
 | `bun run test` | documented | `package.json` |
 | `bun run test:coverage` | documented | `package.json` |
+| `bun run build` | documented | `package.json, .github/workflows/deploy.yml` |
 | `bun run test:e2e` | documented | `package.json, .github/workflows/playwright.yml` |
 | `bun run test:e2e:security` | documented | `package.json, .github/workflows/security-tests.yml` |
-| `bun run build` | documented | `package.json, .github/workflows/deploy.yml` |
+| `bun run setup` | documented | `README.md, package.json` |
 
 ## ASD-STE100
 
 - Architecture prose was written with ASD-STE100 Issue 9 descriptive writing rules in the prompt.
 - Automated check: sentence length (max 25 words) on ARCHITECTURE.md, realworld/AGENTS.md, src/app/AGENTS.md: 2 long sentence(s).
 - A separate standards conformance review was **not** performed.
-  - `src/app/AGENTS.md`: 32 words: It defines the root shell (X), routing in X, HTTP interceptors and auth bootstrap in X, fe...
+  - `src/app/AGENTS.md`: 32 words: It defines the root shell (X), routing in app.routes.ts, HTTP interceptors and auth bootst...
   - `src/app/AGENTS.md`: 33 words: Routes from app.routes.ts: X and X → home; X, X → auth (guest-only); X → settings (X); X →...
 
 ## RAG alert
 
-- **Affected scope:** realworld, realworld/docs, realworld/specs/api, realworld/specs/e2e, src/app
-- **Reason:** evidence the model asked for stayed outside the context budget after the split by component; Conformance knowledge is spread across OpenAPI, SELECTORS.md, many Playwright specs and helpers, Astro docs content, and Bruno/Hurl assets; component split in ARCHITECTURE.md and CONTRACTS.md reduces but does not replace retrieval for endpoint-level and selector-level edits.
+- **Affected scope:** .github, realworld, realworld/specs/api, realworld/specs/e2e, skills, src/app
+- **Reason:** evidence the model asked for stayed outside the context budget after the split by component; Conduit conformance is spread across OpenAPI, SELECTORS.md, Playwright helpers, and Angular feature folders; post-split harness files reduce duplication but agents still need retrieval for selector contracts, API shapes, and test-mode flags.
 - **Missing for:** Requirements, Architect
-- **Index or provide:** realworld/specs/e2e/helpers/debug.ts for ConduitDebug contract, realworld/specs/e2e/helpers/setup.ts and profile.ts for test lifecycle and profile flows, realworld/specs/e2e/url-navigation.spec.ts, realworld/specs/e2e/user-fetch-errors.spec.ts, realworld/specs/e2e/xss-security.spec.ts, realworld/specs/e2e/helpers/profile.ts, realworld/specs/e2e/helpers/setup.ts, realworld/specs/e2e/helpers/debug.ts, realworld/specs/api/openapi.yml, realworld/specs/e2e/SELECTORS.md, realworld/specs/e2e/helpers/*.ts, realworld/docs/src/content/docs, realworld/README.md, realworld/CONTRIBUTING.md
+- **Index or provide:** realworld/specs/e2e/helpers/setup.ts — global E2E setup (excluded file) for Architect, realworld/specs/e2e/helpers/debug.ts — Requirements: ConduitDebug implementation contract for SPA., realworld/specs/e2e/helpers/setup.ts — Architect: global test setup and storageState., realworld/specs/e2e/url-navigation.spec.ts, realworld/specs/e2e/user-fetch-errors.spec.ts, realworld/specs/e2e/xss-security.spec.ts, realworld/specs/e2e/helpers/debug.ts, realworld/specs/e2e/helpers/profile.ts, realworld/specs/e2e/helpers/setup.ts, skills/run-playwright-e2e-tests/SKILL.md, realworld/specs/e2e/helpers/profile.ts for E2E contracts aligned with this UI, .github/workflows/deploy.yml — deploy entry and artifacts, realworld/specs/e2e/SELECTORS.md, realworld/specs/api/openapi.yml, realworld/specs/e2e/helpers/config.ts, realworld/specs/e2e/helpers/api.ts, realworld/specs/e2e/helpers/auth.ts, realworld/specs/e2e/helpers/articles.ts, realworld/specs/e2e/error-handling.spec.ts
 - The run continued with the available evidence. Building an index is the operator's decision.
 
 
 ## Failures, conflicts and limits
 
-- Conflict (needs a decision): realworld/.github/workflows/deploy-docs.yml references working-directory ./docs and artifact path ./docs/dist while the inventory places documentation at realworld/docs; monorepo checkout layout vs workflow paths needs human alignment (analysis coverage_gaps).
-- Conflict (needs a decision): Root CI (.github/workflows/lint.yml, playwright.yml) targets the Angular repo root while realworld/.github/workflows (bruno-check, deploy-docs, codeql) target the realworld subtree; agents must not assume a single CI root without checking which tree changed.
-- Coverage gap: realworld: realworld/Makefile targets and bruno-check implementation are not excerpted; only the workflow reference exists.
-- Coverage gap: realworld: realworld/specs/api/bruno collection layout, bruno.json, and hurl-to-bruno.js behavior are not in evidence.
-- Coverage gap: realworld: realworld/CLAUDE.md, realworld/CONTRIBUTING.md, and realworld/README.md content not supplied for part 1.
-- Coverage gap: realworld: realworld/specs/e2e/* and listed helper files intentionally excluded from all parts; Playwright e2e architecture belongs to other component parts.
-- Coverage gap: realworld: deploy-docs.yml uses working-directory ./docs and path ./docs/dist while inventory places docs at realworld/docs; monorepo versus subtree checkout alignment unclear.
-- Coverage gap: realworld: Full openapi.yml paths and schemas are truncated; favorites and tags endpoints may exist beyond excerpt.
-- Coverage gap: realworld: realworld/specs/api/README.md not excerpted; operator instructions for API tests unverified.
-- Coverage gap: realworld: realworld/specs/e2e/url-navigation.spec.ts not included in any analysis part
-- Coverage gap: realworld: realworld/specs/e2e/user-fetch-errors.spec.ts not included
-- Coverage gap: realworld: realworld/specs/e2e/xss-security.spec.ts not included
-- Coverage gap: realworld: realworld/specs/e2e/helpers/debug.ts not included (ConduitDebug implementation detail)
-- Coverage gap: realworld: realworld/specs/e2e/helpers/profile.ts and setup.ts not included
-- Coverage gap: realworld: Full hurl-to-bruno.js generateBruFile and assert translation logic truncated in evidence
-- Coverage gap: realworld: Hurl .hurl file contents and openapi.yml operations not excerpted in this part
-- Coverage gap: realworld: realworld/docs content structure and Astro routing not excerpted in this part
-- Coverage gap: realworld: realworld/assets/generator/generate_assets.py behavior not excerpted
-- Coverage gap: realworld: Relationship between root .github/workflows/playwright.yml and realworld/specs/e2e path configuration not shown in excerpts
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/url-navigation.spec.ts (URL routing edge cases).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/user-fetch-errors.spec.ts (401 on page load; referenced from error-handling.spec.ts).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/xss-security.spec.ts (security-tagged Playwright suite).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/helpers/config.ts (definition of BROWSER_API and EXTERNAL_API).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/helpers/debug.ts (getToken, getCurrentUser implementation).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/helpers/profile.ts (followUser, unfollowUser, updateProfile).
-- Coverage gap: realworld: No source excerpt for realworld/specs/e2e/helpers/setup.ts (createUserInIsolation, createManyArticles).
-- Coverage gap: realworld: Part 3 does not include e2e specs from earlier parts: articles.spec.ts, auth.spec.ts, comments.spec.ts, error-handling full file tail, and root playwright.config.ts merge with baseConfig.
-- Coverage gap: src/app/features/article: Exact route paths and lazy-load structure for home, article, editor, and /tag/:tag are not confirmed without src/app/app.routes.ts excerpt.
-- Coverage gap: src/app/features/article: HTTP interceptors (API base URL, error shape for err.errors) are not shown in supplied excerpts.
-- Coverage gap: src/app/features/article: tags.service.spec.ts content and any article-specific route guards are not in evidence.
-- Coverage gap: src/app/features/article: Whether profile favorites use ArticleListConfig.filters.favorited is not shown in provided page excerpts (filter exists on model and ArticlesService only).
-- Coverage gap: src/app/features/article: tags.service.ts implementation source not included in part 2 evidence; behavior inferred from tags.service.spec.ts.
-- llm (error): overview analysis failed: Timed out waiting for bridge discovery
+- Coverage gap: realworld: Part 1/3 excludes realworld/specs/e2e/url-navigation.spec.ts, user-fetch-errors.spec.ts, xss-security.spec.ts and helpers debug.ts, profile.ts, setup.ts — E2E behavior and setup flow not fully evidenced here.
+- Coverage gap: realworld: realworld/specs/api/openapi.yml excerpt is truncated; remaining paths (favorites, tags, delete comment) and full response schemas not shown in evidence.
+- Coverage gap: realworld: realworld/Makefile targets beyond bruno-check (e.g. hurl, bruno generation) not quoted in evidence.
+- Coverage gap: realworld: realworld/specs/api/hurl-to-bruno.js and Bruno collection layout under realworld/specs/api/bruno/ not included in evidence blocks.
+- Coverage gap: realworld: realworld/specs/e2e/playwright.base.ts and SELECTORS.md not in evidence — Playwright base URL and selector contract gaps for Architect.
+- Coverage gap: realworld: realworld/AGENTS.md, realworld/README.md, realworld/CONTRIBUTING.md listed in inventory but body not supplied in evidence.
+- Coverage gap: realworld: Deploy workflow paths reference docs/** at repo root in deploy-docs.yml while inventory places docs under realworld/docs — workflow path alignment unclear without full monorepo layout evidence.
+- Coverage gap: realworld: Evidence for part 2/3 does not include OpenAPI endpoint definitions (realworld/specs/api/openapi.yml content).
+- Coverage gap: realworld: E2E specs url-navigation, user-fetch-errors, xss-security and helpers debug.ts, profile.ts, setup.ts were excluded from all analysis parts per caller list.
+- Coverage gap: realworld: playwright.base.ts, Makefile targets, and shell wrappers run-api-tests-bruno.sh / run-api-tests-hurl.sh are listed in inventory but not excerpted.
+- Coverage gap: realworld: realworld/assets/generator and theme/styles.css behavior not shown in evidence blocks.
+- Coverage gap: realworld: Astro content pages under realworld/docs/src/content not excerpted; docs information architecture is inventory-only.
+- Coverage gap: realworld: No source excerpts for `realworld/specs/e2e/url-navigation.spec.ts`, `user-fetch-errors.spec.ts`, or `xss-security.spec.ts` in this part.
+- Coverage gap: realworld: No source for `realworld/specs/e2e/helpers/debug.ts`, `profile.ts`, or `setup.ts` despite references from settings, social, and navigation specs.
+- Coverage gap: realworld: Full root `playwright.config.ts` merge with `baseConfig`, `baseURL`, and `webServer` command not shown in evidence.
+- Coverage gap: realworld: OpenAPI, Bruno/Hurl API test runners, and Astro docs behavior not covered in part 3 evidence.
+- Coverage gap: realworld: Truncated middle of `error-handling.spec.ts` hides complete 403 comment-delete and additional forbidden-case assertions.
+- Coverage gap: src/app/features/article: Exact route paths and lazy-load wiring for HomeComponent, ArticleComponent, and EditorComponent in src/app/app.routes.ts are not evidenced in this part.
+- Coverage gap: src/app/features/article: No page-level Vitest or Playwright tests for article components appear in the supplied excerpts (only ArticlesService and CommentsService unit specs).
+- Coverage gap: src/app/features/article: Profile-scoped list configs (author or favorited filters on ArticleListConfig) are defined in the model but no page in this evidence passes those filters.
+- Coverage gap: src/app/features/article: Error interceptor shape for err.errors versus err in editor submit versus article load is not documented in feature code.
+- Coverage gap: src/app/features/article: tags.service.spec.ts is listed in inventory but not included in evidence.
+- Coverage gap: src/app/features/article: tags.service.ts implementation (mapping operators, providedIn, error mapping) is not in the part 2 evidence block.
+- Coverage gap: src/app/features/article: No excerpt shows which article pages or components inject TagsService or bind tags to the template.
+- Coverage gap: src/app/features/article: ArticlesService, CommentsService, and article route components are not excerpted in part 2.
+- Coverage gap: src/app/features/article: Relationship between tag list and ArticleListConfig / home feed filters is not documented in supplied excerpts.
+- Coverage gap: src/app/features/profile: No excerpt for how profile.routes.ts is imported or path prefix in src/app/app.routes.ts
+- Coverage gap: src/app/features/profile: No component-level unit tests for ProfileComponent, FollowButtonComponent, ProfileArticlesComponent, or ProfileFavoritesComponent in inventory
+- Coverage gap: src/app/features/profile: ArticleListComponent internal HTTP behavior for author and favorited filters not shown in profile excerpts
+- Coverage gap: src/app/features/profile: Duplicate FollowButtonComponent entry in ProfileComponent imports array in source may affect build; not validated in evidence
 
 ## Recommendations
 
-- Link HOOKS.md (caller-rendered) from AGENTS.md: active husky pre-commit lint-staged; proposed pre-push test and format:check hooks from automation evidence.
-- Complete run-api-contract-tests-bruno skill evidence by excerpting realworld/specs/api/run-api-tests-bruno.sh and realworld/Makefile bruno-check target before agents rely on HOST defaults.
-- Document in TESTING.md that CI runs format:check, test:e2e, test:e2e:security, and build; Vitest (bun run test) is documented in package.json but not shown in supplied workflow excerpts (inferred gap).
-- When editing E2E specs, require reading realworld/specs/e2e/SELECTORS.md and helpers/config.ts for BROWSER_API and EXTERNAL_API gates.
-- Preserve realworld/CLAUDE.md and realworld/CONTRIBUTING.md as authoritative for upstream RealWorld contributions; root CLAUDE.md for this implementation fork.
+- Link HOOKS.md from AGENTS.md after the caller renders hooks; active husky pre-commit uses npx lint-staged but lint-staged path rules are not evidenced—document them in HOOKS.md or package.json when found.
+- Consider gating bun run test in CI; automation notes Vitest is documented locally but no workflow in supplied evidence runs unit tests.
+- Render skills/add-e2e-api-error-test/SKILL.md from the truncated skill draft in analysis if that workflow is in scope; it is not in the existing harness skills list.
+- Preserve CLAUDE.md and realworld/CLAUDE.md as human-authored companions; AGENTS.md should link with one-line summaries per G3.
+
+## Project context
+
+| Key | Value |
+|---|---|
+| application | Conduit (RealWorld) social blogging SPA |
+| language | TypeScript |
+| framework | Angular 21 |
+| package_manager | Bun |
+| entry_point | src/main.ts |
+| routing | src/app/app.routes.ts |
+| api_client | Angular HttpClient with token, API, and error interceptors under src/app/core/interceptors |
+| test_runner | Vitest (src/**/*.spec.ts, vitest.config.ts) |
+| e2e_runner | Playwright (realworld/specs/e2e, root playwright.config.ts) |
+| setup_hint | Requires Bun; run bun run setup after clone (README.md) |
+| start_hint | bun run start; dev URL http://localhost:4200 (playwright.config.ts) |
+| build_hint | bun run build; output dist/angular-conduit (angular.json) |
+| test_hint | bun run test for unit; bun run test:e2e for conformance E2E (TESTING.md, AGENTS.md) |
+| conformance_pack | realworld/ (OpenAPI, shared E2E, docs, API runners) |
+| agent_entry | AGENTS.md |
+| node_engine | >=20.11.1 (package.json engines) |
 
 ## Publication
 

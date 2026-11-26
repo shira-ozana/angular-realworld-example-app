@@ -10,25 +10,26 @@
 
 ## Prerequisites
 - DOM selectors and routes match realworld/specs/e2e/SELECTORS.md
-- Helper modules exist or will be added under realworld/specs/e2e/helpers/
+- Helper modules under realworld/specs/e2e/helpers/
 
 ## Steps
-1. Create or open a domain spec file under realworld/specs/e2e/ (for example articles.spec.ts).
-2. Import test and expect from @playwright/test and domain helpers from ./helpers/auth, ./helpers/articles, or ./helpers/comments.
-3. Wrap tests in test.describe with test.beforeEach that registers a unique user via generateUniqueUser and register when the flow requires auth.
-4. Add test.afterEach that awaits context.close() and waits 500ms to reduce flakiness from resource exhaustion (pattern in articles.spec.ts and comments.spec.ts).
-5. Implement scenarios using helper functions (createArticle, login, addComment) and assert on URLs and locators documented in SELECTORS.md.
-6. For SPA-only HTTP client behavior, gate tests with test.skip(!BROWSER_API, ...) and import BROWSER_API from ./helpers/config.
+1. Create or open a domain spec under realworld/specs/e2e/ (for example articles.spec.ts).
+2. Import test and expect from @playwright/test and helpers from ./helpers/auth, ./helpers/articles, or ./helpers/comments.
+3. Use test.describe with test.beforeEach that registers a unique user when auth is required.
+4. Add test.afterEach that awaits context.close() and waits 500ms (pattern in articles.spec.ts and comments.spec.ts).
+5. Implement scenarios with helpers and assert URLs and locators per SELECTORS.md.
+6. Gate SPA-only HTTP behavior with test.skip(!BROWSER_API, ...) and import BROWSER_API from ./helpers/config.
 
 ## Existing example
-- `realworld/specs/e2e/articles.spec.ts (create, edit, delete, favorite flows); realworld/specs/e2e/auth.spec.ts (register, login, logout, session); realworld/specs/e2e/comments.spec.ts (add, delete, reload).`
+- `realworld/specs/e2e/articles.spec.ts (create, edit, delete, favorite); realworld/specs/e2e/auth.spec.ts; realworld/specs/e2e/comments.spec.ts.`
 
 ## Sources
 - [`realworld/specs/e2e/articles.spec.ts`](../../realworld/specs/e2e/articles.spec.ts)
 - [`realworld/specs/e2e/auth.spec.ts`](../../realworld/specs/e2e/auth.spec.ts)
 - [`realworld/specs/e2e/comments.spec.ts`](../../realworld/specs/e2e/comments.spec.ts)
 - [`realworld/specs/e2e/SELECTORS.md`](../../realworld/specs/e2e/SELECTORS.md)
+- [`skills/add-e2e-domain-spec/SKILL.md`](SKILL.md)
 
 ## Verification
-- bun run test:e2e -- realworld/specs/e2e/auth.spec.ts (status: documented; exact path filter inferred from Playwright CLI convention)
+- bun run test:e2e -- realworld/specs/e2e/auth.spec.ts (status: documented; path filter inferred from Playwright CLI convention)
 <!-- init-agent:end -->

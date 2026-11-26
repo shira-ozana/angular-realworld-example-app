@@ -5,10 +5,10 @@ The `realworld/` folder is the **RealWorld conformance pack**. It is not a runna
 
 | Area | Path | Role |
 |------|------|------|
-| API contract and runners | `specs/api/` | `openapi.yml`, Hurl source tests, generated `bruno/`, `run-api-tests-hurl.sh`, `run-api-tests-bruno.sh`, `hurl-to-bruno.js` |
-| Frontend E2E contract | `specs/e2e/` | Playwright specs, `SELECTORS.md`, `playwright.base.ts`, `helpers/` |
-| Documentation | `docs/` | Starlight site (`package.json` scripts `dev`, `build`) |
-| Workflows | [Makefile](Makefile) | `make help`, docs and Bruno targets per [CLAUDE.md](CLAUDE.md) |
+| API contract and runners | `specs/api/` | `openapi.yml`, Hurl source tests, generated `bruno/`, `run-api-tests-hurl.sh`, [run-api-tests-bruno.sh](specs/api/run-api-tests-bruno.sh), `hurl-to-bruno.js` |
+| Frontend E2E contract | `specs/e2e/` | Domain `*.spec.ts`, `helpers/`, `playwright.base.ts`, selector and routing contract in `SELECTORS.md` |
+| Documentation | `docs/` | Starlight site; scripts in [docs/package.json](docs/package.json) |
+| Workflows | `Makefile` | `documentation-setup`, `documentation-dev`, `documentation-build`, `bruno-generate`, `bruno-check` per [CLAUDE.md](CLAUDE.md) |
 | Contributor process | [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, PRs, commit message format |
 
 Angular implementation work lives under `../src/app/`; see [../src/app/AGENTS.md](../src/app/AGENTS.md). System map: [../ARCHITECTURE.md](../ARCHITECTURE.md). REST and UI contracts: [../CONTRACTS.md](../CONTRACTS.md), [../DOMAIN.md](../DOMAIN.md).
@@ -19,28 +19,32 @@ Read these before you change anything under `realworld/`:
 
 1. [CLAUDE.md](CLAUDE.md) — spec hub rules: use `bun`, Hurl is API source of truth, do not hand-edit `specs/api/bruno/`, fix implementations not specs when vendored.
 2. [CONTRIBUTING.md](CONTRIBUTING.md) — submission and commit conventions for upstream RealWorld changes.
-3. [README.md](README.md) — overview of the tree.
-4. [Makefile](Makefile) — `documentation-setup`, `documentation-dev`, `documentation-build`, `bruno-generate`, `bruno-check`.
+3. `README.md` — overview of the tree.
+4. `Makefile` — docs and Bruno targets; `make bruno-check` mirrors CI.
 5. [docs/package.json](docs/package.json) — Astro dev and production build scripts.
-6. [specs/e2e/playwright.base.ts](specs/e2e/playwright.base.ts) — shared Playwright defaults; implementations extend this at the repo root.
-7. `specs/e2e/SELECTORS.md` — DOM, routes, `jwtToken`, and debug interface contract (no link in harness plan; open by path).
-8. [specs/api/openapi.yml](specs/api/openapi.yml) — canonical REST surface.
-9. [.github/workflows/bruno-check.yml](.github/workflows/bruno-check.yml) — CI runs Bruno sync check via `make bruno-check`.
+6. `specs/e2e/playwright.base.ts` — shared Playwright defaults; the host repo merges this at the root.
+7. **`specs/e2e/SELECTORS.md`** — read before any E2E spec or helper change: required routes, DOM selectors, `localStorage` key `jwtToken`, and `window.__conduit_debug__`. Also read when verifying SPA conformance in `../src/app/`.
+8. `specs/e2e/helpers/config.ts` — `BROWSER_API`, `EXTERNAL_API`, and test-mode gates used across specs.
+9. `specs/api/openapi.yml` — canonical REST surface aligned with Hurl.
+10. `.github/workflows/bruno-check.yml` — CI runs Bruno sync via `make bruno-check`.
+
+E2E layout: domain specs live beside `helpers/` under `specs/e2e/` (for example `articles.spec.ts`, `auth.spec.ts`, `navigation.spec.ts`, `error-handling.spec.ts`). Shared flows import from `./helpers/`; SPA-only HTTP mocking uses `test.skip(!BROWSER_API, …)` per [../GUIDELINES.md](../GUIDELINES.md).
 
 ## Commands
 
-All statuses are **documented** (from [CLAUDE.md](CLAUDE.md), [Makefile](Makefile), [docs/package.json](docs/package.json), and API shell scripts).
+All statuses are **documented** (from [CLAUDE.md](CLAUDE.md), `Makefile`, [docs/package.json](docs/package.json), and API shell scripts).
 
 | Task | Command | Notes |
 |------|---------|--------|
 | Docs install | `make documentation-setup` | `cd docs && bun install` |
-| Docs dev | `make documentation-dev` or `cd docs && bun run dev` | Starlight preview |
+| Docs dev | `make documentation-dev` or `cd docs && bun run dev` | Starlight preview; see [../skills/run-realworld-docs-dev/SKILL.md](../skills/run-realworld-docs-dev/SKILL.md) |
 | Docs build | `make documentation-build` or `cd docs && bun run build` | `astro check && astro build` |
-| API Hurl (source) | `HOST=http://localhost:8000 ./specs/api/run-api-tests-hurl.sh` | From `specs/api/`; set `HOST` to backend base |
-| API Bruno (generated) | `HOST=http://localhost:8000 ./specs/api/run-api-tests-bruno.sh` | Same `HOST`; uses `bun x @usebruno/cli` |
+| API Hurl (source) | `HOST=http://localhost:8000 ./specs/api/run-api-tests-hurl.sh` | From `specs/api/`; see [../skills/run-hurl-api-tests/SKILL.md](../skills/run-hurl-api-tests/SKILL.md) |
+| API Bruno (generated) | `HOST=http://localhost:8000 ./specs/api/run-api-tests-bruno.sh` | Same `HOST`; see [../skills/run-bruno-api-tests/SKILL.md](../skills/run-bruno-api-tests/SKILL.md) |
 | Regenerate Bruno | `make bruno-generate` | Edit Hurl only, then regenerate |
-| Verify Bruno in sync | `make bruno-check` | Matches [.github/workflows/bruno-check.yml](.github/workflows/bruno-check.yml) |
+| Verify Bruno in sync | `make bruno-check` | See [../skills/check-bruno-hurl-sync/SKILL.md](../skills/check-bruno-hurl-sync/SKILL.md) |
 | E2E against SPA (root) | `bun run test:e2e` | Suite under `specs/e2e/`; see [../TESTING.md](../TESTING.md) |
+| Focused E2E file | Playwright path filter from repo root | [../skills/run-playwright-single-spec/SKILL.md](../skills/run-playwright-single-spec/SKILL.md) |
 
 Use **`bun`**, not `npm`/`node`, for work inside this tree ([CLAUDE.md](CLAUDE.md)).
 
@@ -49,12 +53,16 @@ Use **`bun`**, not `npm`/`node`, for work inside this tree ([CLAUDE.md](CLAUDE.m
 | Skill | When |
 |-------|------|
 | [../skills/run-realworld-docs-dev/SKILL.md](../skills/run-realworld-docs-dev/SKILL.md) | Preview or change the Starlight site under `docs/`. |
-| [../skills/add-e2e-domain-spec/SKILL.md](../skills/add-e2e-domain-spec/SKILL.md) | Add or extend Playwright coverage using `specs/e2e/helpers/` and `SELECTORS.md`. |
+| [../skills/run-hurl-api-tests/SKILL.md](../skills/run-hurl-api-tests/SKILL.md) | Run canonical Hurl API tests against a backend `HOST`. |
+| [../skills/run-bruno-api-tests/SKILL.md](../skills/run-bruno-api-tests/SKILL.md) | Run the generated Bruno collection against the same `HOST`. |
+| [../skills/check-bruno-hurl-sync/SKILL.md](../skills/check-bruno-hurl-sync/SKILL.md) | After Hurl or generator edits; before commit when API tests change. |
+| [../skills/add-e2e-domain-spec/SKILL.md](../skills/add-e2e-domain-spec/SKILL.md) | Add or extend Playwright coverage using `helpers/` and `SELECTORS.md`. |
+| [../skills/add-e2e-api-error-test/SKILL.md](../skills/add-e2e-api-error-test/SKILL.md) | Assert `.error-messages` and usable UI on API 4xx/edge cases (`BROWSER_API`). |
+| [../skills/add-e2e-navigation-social-spec/SKILL.md](../skills/add-e2e-navigation-social-spec/SKILL.md) | Feeds, tags, pagination, follow/unfollow, settings; `EXTERNAL_API` branches. |
+| [../skills/add-spa-route-mock-test/SKILL.md](../skills/add-spa-route-mock-test/SKILL.md) | BROWSER_API-only `page.route` DELETE 2xx handling tests. |
 | [../skills/run-playwright-e2e-tests/SKILL.md](../skills/run-playwright-e2e-tests/SKILL.md) | Run the shared E2E suite from the implementation repo root (non-`@security`). |
 | [../skills/run-playwright-security-e2e-tests/SKILL.md](../skills/run-playwright-security-e2e-tests/SKILL.md) | Run specs tagged `@security` only. |
-| [../skills/add-spa-route-mock-test/SKILL.md](../skills/add-spa-route-mock-test/SKILL.md) | Add BROWSER_API-only `page.route` DELETE status handling tests. |
-
-API contract runs (Bruno/Hurl) are documented in [CLAUDE.md](CLAUDE.md) and [Makefile](Makefile); a dedicated harness skill for Bruno was not in the planned skill set.
+| [../skills/run-playwright-single-spec/SKILL.md](../skills/run-playwright-single-spec/SKILL.md) | Iterate on one spec file during E2E work. |
 
 Patterns for `TEST_MODE`, `BROWSER_API`, and `EXTERNAL_API`: [../GUIDELINES.md](../GUIDELINES.md). Full verification matrix: [../TESTING.md](../TESTING.md).
 
@@ -64,7 +72,7 @@ Binding agent rules: [../RULES.md](../RULES.md). When this tree is vendored for 
 
 ## Hooks
 
-Repository hooks (format, tests): [../HOOKS.md](../HOOKS.md). CI Bruno check is active via [.github/workflows/bruno-check.yml](.github/workflows/bruno-check.yml).
+Repository hooks (format, tests): [../HOOKS.md](../HOOKS.md). CI Bruno check is active via `.github/workflows/bruno-check.yml` (`make bruno-check`).
 
 ## Check a change
 
@@ -74,13 +82,13 @@ Use the narrowest check for the area you touched:
 |-------------|--------|
 | `docs/` content or config | `make documentation-build` (or `cd docs && bun run build`) |
 | `specs/api/hurl/` or `hurl-to-bruno.js` | `make bruno-check`; optionally `HOST=… ./specs/api/run-api-tests-hurl.sh` |
-| `specs/e2e/` specs or helpers | From repo root: `bun run test:e2e` and, if relevant, a focused path per [../skills/add-e2e-domain-spec/SKILL.md](../skills/add-e2e-domain-spec/SKILL.md) |
-| OpenAPI only | Regenerate or run Hurl suite against a backend when behavior is test-covered |
+| `specs/e2e/` specs or helpers | Align with `specs/e2e/SELECTORS.md`; from repo root `bun run test:e2e` or [../skills/run-playwright-single-spec/SKILL.md](../skills/run-playwright-single-spec/SKILL.md) |
+| OpenAPI only | Update Hurl when behavior is test-covered; run Hurl against a backend when applicable |
 
 ## Existing guidance
 
 - [CLAUDE.md](CLAUDE.md) — conventions, test entry points, submodule policy.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — PR and commit guidelines for spec hub contributions.
-- [README.md](README.md) — tree introduction.
+- `README.md` — tree introduction.
 - Frontend E2E integration for implementers: https://docs.realworld.show/specifications/frontend/tests/ (external; cited in [CLAUDE.md](CLAUDE.md)).
 <!-- init-agent:end -->

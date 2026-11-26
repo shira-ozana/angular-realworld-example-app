@@ -12,7 +12,7 @@ Related harness: [DOMAIN.md](DOMAIN.md) (vocabulary), [ARCHITECTURE.md](ARCHITEC
 | Item | Value | Canonical source |
 |------|--------|------------------|
 | API base URL (reference) | `https://api.realworld.show/api` | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
-| E2E / helper default base | `API_BASE` env, else same reference URL | `realworld/specs/e2e/helpers/config.ts` (not excerpted in harness; behavior cited in analysis) |
+| E2E / helper default base | `API_BASE` environment variable, else the reference URL | `realworld/specs/e2e/helpers/config.ts` |
 | Authentication | Header `Authorization: Token <jwt>` (scheme name **Token**) | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
 
 ### Documented HTTP surface (OpenAPI)
@@ -22,14 +22,14 @@ Paths exercised by contract tests and E2E API helpers include:
 - Auth: `POST /users`, `POST /users/login`, `GET /user`, `PUT /user`
 - Profiles: `GET /profiles/{username}`, `POST` / `DELETE` `/profiles/{username}/follow`
 - Articles: `GET` / `POST` `/articles`, `GET /articles/feed`, `GET` / `PUT` / `DELETE` `/articles/{slug}`
-- Comments: `GET` / `POST` `/articles/{slug}/comments`, `DELETE` `/articles/{slug}/comments/{id}` (exact comment path shape: see OpenAPI)
+- Comments: `GET` / `POST` `/articles/{slug}/comments`, `DELETE` `/articles/{slug}/comments/{id}` (exact path shape: see OpenAPI)
 - Tags: `GET /tags`
 
-Request/response shapes, pagination (`offset`, `limit`, default 20), and wrapper objects (`user`, `article`, `comment`) are defined in [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml). HTTP contract verification uses Bruno or Hurl under `realworld/specs/api` ([realworld/AGENTS.md](realworld/AGENTS.md)).
+Request and response shapes, pagination (`offset`, `limit`, default 20), and wrapper objects (`user`, `article`, `comment`) are defined in [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml). HTTP contract verification uses Bruno or Hurl under `realworld/specs/api` ([realworld/AGENTS.md](realworld/AGENTS.md)); see [skills/run-hurl-api-tests/SKILL.md](skills/run-hurl-api-tests/SKILL.md) and [skills/run-bruno-api-tests/SKILL.md](skills/run-bruno-api-tests/SKILL.md).
 
 ### E2E API helper contract
 
-[realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) implements the same REST surface for `EXTERNAL_API` setup: register and login return a token; authenticated calls send `Authorization: Token …`. Use this file when adding cross-user or API-seeded scenarios ([skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md)).
+[realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) implements the same REST surface for `EXTERNAL_API` setup. Register and login return a token. Authenticated calls send `Authorization: Token …`. Functions such as `registerUserViaAPI`, `loginUserViaAPI`, `createArticleViaAPI`, `updateUserViaAPI`, and `createManyArticles` match OpenAPI JSON shapes. Use this file when adding cross-user or API-seeded scenarios ([skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md)).
 
 ---
 
@@ -39,8 +39,8 @@ Request/response shapes, pagination (`offset`, `limit`, default 20), and wrapper
 |------|-----------|------------------|
 | Routes | See table below | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
 | DOM selectors | Navbar, forms, article preview, errors, tags, comments | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
-| Session storage | `localStorage` key **`jwtToken`** | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md), [realworld/specs/e2e/auth.spec.ts](realworld/specs/e2e/auth.spec.ts) |
-| Debug interface | **`window.__conduit_debug__`** (`getToken`, `getAuthState`, `getCurrentUser`) | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md); implementation detail in `realworld/specs/e2e/helpers/debug.ts` (coverage gap: file not in harness link table) |
+| Session storage | `localStorage` key **`jwtToken`** | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
+| Debug interface | **`window.__conduit_debug__`** (`getToken`, `getAuthState`, `getCurrentUser`) | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
 
 ### Routes (Playwright / Conduit frontends)
 
@@ -53,46 +53,46 @@ Request/response shapes, pagination (`offset`, `limit`, default 20), and wrapper
 | `/settings` | Current user profile settings |
 | `/profile/:username`, `/profile/:username/favorites` | Profile and favorites list |
 
-E2E specs such as [realworld/specs/e2e/auth.spec.ts](realworld/specs/e2e/auth.spec.ts) assert post-login navigation to `/` and logout UX. Article flows use `/editor` → `/article/:slug` ([skills/run-playwright-e2e-tests/SKILL.md](skills/run-playwright-e2e-tests/SKILL.md)).
+E2E specs assert post-login navigation to `/` and editor flows through `/article/:slug`. Run the suite via [skills/run-playwright-e2e-tests/SKILL.md](skills/run-playwright-e2e-tests/SKILL.md). Angular routes in `src/app/app.routes.ts` should match this table.
 
 ### DOM and UX expectations (index)
 
 Implementations must expose selectors and classes referenced in shared tests, including among others:
 
 - `nav.navbar`, `.error-messages` for API errors
-- Registration/login: `input[name="email"]`, and related fields per SELECTORS
+- Registration and login: `input[name="email"]` and related fields per SELECTORS
 - Editor: control with text **Publish Article**
 - Lists: `.article-preview`, `.sidebar .tag-list .tag-pill`
-- Profile: `.user-info`, `.user-img` (null/empty image → default avatar per null-field specs)
-- Comments: textarea with placeholder **Write a comment**, **Post Comment**, author delete in `.mod-options`
+- Profile: `.user-info`, `.user-img` (null or empty image → default avatar)
+- Comments: placeholder **Write a comment**, **Post Comment**, author delete in `.mod-options`
 
-Do not duplicate the full selector list here; treat [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) as authoritative.
+Do not duplicate the full selector list here. Treat [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) as authoritative. API error UX is exercised in error-handling specs; see [skills/add-e2e-api-error-test/SKILL.md](skills/add-e2e-api-error-test/SKILL.md).
 
 ### Browser session and debug
 
-After register or login, the SPA stores the JWT under **`jwtToken`** in `localStorage`. Tests read it for authenticated API calls and session checks ([realworld/specs/e2e/auth.spec.ts](realworld/specs/e2e/auth.spec.ts)).
+After register or login, the SPA stores the JWT under **`jwtToken`** in `localStorage`. Tests read it for authenticated API calls and session checks.
 
-When **`BROWSER_API`** is enabled, settings and auth specs may call **`window.__conduit_debug__`** to read token and in-memory user state after `PUT /user` (see analysis citing `settings.spec.ts`). Full method signatures are documented in SELECTORS; helper wiring is in `realworld/specs/e2e/helpers/debug.ts`.
+When **`BROWSER_API`** is enabled, settings specs may call **`window.__conduit_debug__`** to read token and in-memory user state after `PUT /user`. Full method signatures are in SELECTORS; helper wiring is in `realworld/specs/e2e/helpers/debug.ts`.
 
 ---
 
 ## Test mode flags (contract gating)
 
-Shared E2E behavior depends on flags from `realworld/specs/e2e/helpers/config.ts` (not fully excerpted):
+Shared E2E behavior depends on flags from `realworld/specs/e2e/helpers/config.ts`:
 
 | Flag | Effect on contract usage |
 |------|---------------------------|
-| `TEST_MODE` | Architecture gating for which specs apply |
+| `TEST_MODE` | Gates which specs apply (`spa`, `ssr`, `fullstack`) (inferred) |
 | `BROWSER_API` | UI HTTP client tests (`page.route`), debug helpers, error-handling against mocked responses |
 | `EXTERNAL_API` | Live API setup via [realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts); health checks against `/tags` |
 
-Patterns are summarized in [GUIDELINES.md](GUIDELINES.md). Security-only UI contracts are covered by specs tagged `@security` ([skills/run-playwright-security-e2e-tests/SKILL.md](skills/run-playwright-security-e2e-tests/SKILL.md)).
+Patterns are summarized in [GUIDELINES.md](GUIDELINES.md). Navigation and social flows that branch on these flags are covered by [skills/add-e2e-navigation-social-spec/SKILL.md](skills/add-e2e-navigation-social-spec/SKILL.md). Security-only UI contracts use specs tagged `@security` ([skills/run-playwright-security-e2e-tests/SKILL.md](skills/run-playwright-security-e2e-tests/SKILL.md)).
 
 ---
 
 ## Client HTTP semantics (SPA-only)
 
-Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for example `200` with an empty JSON body) as success, not only `204`. See [skills/add-spa-route-mock-test/SKILL.md](skills/add-spa-route-mock-test/SKILL.md) and `realworld/specs/e2e/articles.spec.ts` / `comments.spec.ts`.
+Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for example `200` with an empty JSON body) as success, not only `204`. See [skills/add-spa-route-mock-test/SKILL.md](skills/add-spa-route-mock-test/SKILL.md).
 
 ---
 
@@ -103,16 +103,15 @@ Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for 
 | REST OpenAPI | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
 | UI routes and selectors | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
 | REST helpers for tests | [realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) |
-| Auth UI + `jwtToken` examples | [realworld/specs/e2e/auth.spec.ts](realworld/specs/e2e/auth.spec.ts) |
+| Bruno sync with Hurl | [skills/check-bruno-hurl-sync/SKILL.md](skills/check-bruno-hurl-sync/SKILL.md) |
 
 ---
 
 ## Coverage gaps
 
-- Full OpenAPI paths, schemas, and favorites/tags operations may extend beyond analysis excerpts; read [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) directly.
-- Complete `window.__conduit_debug__` API and `helpers/debug.ts` are not duplicated in this index.
-- `realworld/specs/e2e/helpers/config.ts` definitions for `TEST_MODE`, `BROWSER_API`, and `EXTERNAL_API` are referenced but not excerpted in the INIT evidence set.
-- Angular route definitions in `src/app/app.routes.ts` should match the UI route table; verify with E2E, not by copying routes into this file.
+- Full OpenAPI paths, schemas, favorites, and tags operations may extend beyond analysis excerpts. Read [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) directly.
+- Complete `window.__conduit_debug__` API and `realworld/specs/e2e/helpers/config.ts` flag definitions are not duplicated in this index.
+- Angular route definitions in `src/app/app.routes.ts` should match the UI route table. Verify with E2E, not by copying routes into this file.
 
 For agent entry and verification commands, start at [AGENTS.md](AGENTS.md). INIT outcomes: [platform/init/INIT.md](platform/init/INIT.md).
 <!-- init-agent:end -->

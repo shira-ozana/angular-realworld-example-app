@@ -15,15 +15,16 @@
 ## Steps
 1. Mark the test with test.skip(!BROWSER_API, 'SPA-only: tests client-side HTTP status code handling via page.route()').
 2. Call page.route on **/api/articles/* or **/api/articles/*/comments/* for DELETE.
-3. Inside the handler, route.fetch() to perform the real delete, then route.fulfill with status 200 and an empty JSON body.
-4. Invoke deleteArticle or deleteComment and assert navigation or DOM state matches the happy path.
+3. Inside the handler, route.fetch() then route.fulfill with status 200 and an empty JSON body.
+4. Invoke deleteArticle or deleteComment and assert navigation or DOM matches the happy path.
 
 ## Existing example
-- `Tests 'should delete an article when server returns 200 instead of 204' in realworld/specs/e2e/articles.spec.ts and the analogous comment test in realworld/specs/e2e/comments.spec.ts.`
+- `Test 'should delete an article when server returns 200 instead of 204' in realworld/specs/e2e/articles.spec.ts; analogous comment test in comments.spec.ts.`
 
 ## Sources
 - [`realworld/specs/e2e/articles.spec.ts`](../../realworld/specs/e2e/articles.spec.ts)
 - [`realworld/specs/e2e/comments.spec.ts`](../../realworld/specs/e2e/comments.spec.ts)
+- [`skills/add-spa-route-mock-test/SKILL.md`](SKILL.md)
 
 ## Verification
 - bun run test:e2e with grep for '200 instead of 204' (status: documented runner; grep filter inferred)

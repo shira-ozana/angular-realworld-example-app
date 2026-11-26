@@ -3,7 +3,7 @@
 
 Binding constraints for agent-assisted work in this repository. Recommendations belong in [GUIDELINES.md](GUIDELINES.md). Entry points and verification are in [AGENTS.md](AGENTS.md) and [TESTING.md](TESTING.md).
 
-Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realworld/CLAUDE.md), and [realworld/CONTRIBUTING.md](realworld/CONTRIBUTING.md) takes precedence over harness files when they conflict; record conflicts for review rather than overriding them.
+Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CONTRIBUTING.md` takes precedence over harness files when they conflict; record conflicts for review rather than overriding them.
 
 ---
 
@@ -11,7 +11,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Rule:** Agents must not modify application source, production configs, lockfiles, or CI workflow files when the task is limited to harness documentation (`AGENTS.md`, skills, `RULES.md`, and related Markdown under the harness catalog).
 
-**Scope:** Repository root harness files; `skills/**`; `realworld/AGENTS.md`; `src/app/AGENTS.md`; excludes intentional feature or bug-fix tasks on `src/app/**`, `package.json` scripts wiring, and `playwright.config.ts` when explicitly requested.
+**Scope:** Repository root harness files; `skills/**`; [realworld/AGENTS.md](realworld/AGENTS.md); [src/app/AGENTS.md](src/app/AGENTS.md); excludes intentional feature or bug-fix tasks on `src/app/**`, `package.json` scripts wiring, and `playwright.config.ts` when explicitly requested.
 
 **Basis:** Platform harness contract (R6); [platform/init/INIT.md](platform/init/INIT.md) scope.
 
@@ -25,9 +25,9 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** All harness Markdown and agent summaries.
 
-**Basis:** [CLAUDE.md](CLAUDE.md) and init rules R1; [AGENTS.md](AGENTS.md).
+**Basis:** Init rule R1; [AGENTS.md](AGENTS.md).
 
-**Check:** Review prose for claims without `evidence` paths; label inferences explicitly (see RULE-03).
+**Check:** Review prose for claims without evidence paths; label inferences explicitly (see RULE-03).
 
 ---
 
@@ -45,11 +45,11 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 ## RULE-04: Preserve human-authored guidance; do not contradict it
 
-**Rule:** Do not copy [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realworld/CLAUDE.md), or [realworld/CONTRIBUTING.md](realworld/CONTRIBUTING.md) in full into harness files; link them. Do not contradict their instructions; list conflicts for human review.
+**Rule:** Do not copy `CLAUDE.md`, `realworld/CLAUDE.md`, or `realworld/CONTRIBUTING.md` in full into harness files; link or name them in `code`. Do not contradict their instructions; list conflicts for human review.
 
 **Scope:** Root and local `AGENTS.md`, `RULES.md`, `GUIDELINES.md`.
 
-**Basis:** Init rule R5; [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realworld/CLAUDE.md), [realworld/CONTRIBUTING.md](realworld/CONTRIBUTING.md).
+**Basis:** Init rule R5; `CLAUDE.md`, `realworld/CLAUDE.md`, `realworld/CONTRIBUTING.md`.
 
 **Check:** Harness sections point to source files with one-line summaries instead of duplicating long passages.
 
@@ -57,11 +57,11 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 ## RULE-05: Match frontend E2E UI contract in SELECTORS.md
 
-**Rule:** SPA changes that affect tests must keep routes, DOM selectors, `localStorage` key `jwtToken`, and `window.__conduit_debug__` behavior aligned with `realworld/specs/e2e/SELECTORS.md`.
+**Rule:** SPA changes that affect tests must keep routes, DOM selectors, `localStorage` key `jwtToken`, and `window.__conduit_debug__` (`getToken`, `getAuthState`, `getCurrentUser`) aligned with [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md).
 
 **Scope:** `src/app/**`; shared specs under `realworld/specs/e2e/**`.
 
-**Basis:** [CONTRACTS.md](CONTRACTS.md); `realworld/specs/e2e/SELECTORS.md`; E2E helpers and specs cited in analysis (`realworld/specs/e2e/auth.spec.ts`, `realworld/specs/e2e/articles.spec.ts`).
+**Basis:** [CONTRACTS.md](CONTRACTS.md); [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md); E2E specs such as `realworld/specs/e2e/auth.spec.ts` and `realworld/specs/e2e/articles.spec.ts`.
 
 **Check:** Run [skills/run-playwright-e2e-tests/SKILL.md](skills/run-playwright-e2e-tests/SKILL.md): `bun run test:e2e` (status: documented).
 
@@ -73,7 +73,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** `realworld/specs/e2e/*.spec.ts`; `realworld/specs/e2e/helpers/config.ts`.
 
-**Basis:** `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`; [GUIDELINES.md](GUIDELINES.md).
+**Basis:** `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`, `realworld/specs/e2e/error-handling.spec.ts`; [GUIDELINES.md](GUIDELINES.md).
 
 **Check:** Grep for `BROWSER_API` in edited specs; run focused E2E per [TESTING.md](TESTING.md).
 
@@ -85,7 +85,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** `realworld/specs/e2e/*.spec.ts`.
 
-**Basis:** Analysis of `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`; [skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md).
+**Basis:** `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`; [skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md).
 
 **Check:** Code review of new or changed `test.afterEach` blocks; `bun run test:e2e` on touched files (status: documented).
 
@@ -97,7 +97,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** `src/app/**`.
 
-**Basis:** [src/app/AGENTS.md](src/app/AGENTS.md); inventory paths; [skills/run-vitest-unit-tests/SKILL.md](skills/run-vitest-unit-tests/SKILL.md).
+**Basis:** [src/app/AGENTS.md](src/app/AGENTS.md); [skills/run-vitest-unit-tests/SKILL.md](skills/run-vitest-unit-tests/SKILL.md).
 
 **Check:** `bun run test` (status: documented).
 
@@ -107,9 +107,9 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Rule:** Staged files must pass `npx lint-staged` before commit when the Husky pre-commit hook is enabled.
 
-**Scope:** Git staged files (types configured in lint-staged; exact globs not in supplied evidence).
+**Scope:** Git staged files (lint-staged globs not fully excerpted in supplied evidence).
 
-**Basis:** [.husky/pre-commit](.husky/pre-commit); [HOOKS.md](HOOKS.md).
+**Basis:** `.husky/pre-commit`; [HOOKS.md](HOOKS.md).
 
 **Check:** Commit triggers hook; on failure fix formatting and re-stage. Manual: `bun run format:check` (status: documented).
 
@@ -117,13 +117,13 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 ## RULE-10: Keep Bruno collection in sync with Hurl source
 
-**Rule:** Changes to `realworld/specs/api/hurl/*.hurl` must be reflected in generated `realworld/specs/api/bruno/` via `hurl-to-bruno.js`; CI check mode must pass when Bruno is part of the change.
+**Rule:** Changes to `realworld/specs/api/hurl/*.hurl` must be reflected in generated `realworld/specs/api/bruno/` via `realworld/specs/api/hurl-to-bruno.js`; CI check mode must pass when Bruno is part of the change.
 
 **Scope:** `realworld/specs/api/hurl/**`; `realworld/specs/api/bruno/**`; `realworld/specs/api/hurl-to-bruno.js`.
 
 **Basis:** `realworld/specs/api/hurl-to-bruno.js`; `realworld/.github/workflows/bruno-check.yml`; [realworld/AGENTS.md](realworld/AGENTS.md).
 
-**Check:** `bun realworld/specs/api/hurl-to-bruno.js --check` (status: documented per analysis); realworld Makefile `bruno-check` when working in the conformance subtree.
+**Check:** [skills/check-bruno-hurl-sync/SKILL.md](skills/check-bruno-hurl-sync/SKILL.md); `bun realworld/specs/api/hurl-to-bruno.js --check` (status: documented).
 
 ---
 
@@ -135,7 +135,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Basis:** [CONTRACTS.md](CONTRACTS.md); `realworld/specs/api/openapi.yml`; [DOMAIN.md](DOMAIN.md).
 
-**Check:** Bruno or Hurl runners per [realworld/AGENTS.md](realworld/AGENTS.md) (`run-api-tests-bruno.sh`, `run-api-tests-hurl.sh`; status: documented).
+**Check:** [skills/run-hurl-api-tests/SKILL.md](skills/run-hurl-api-tests/SKILL.md) or [skills/run-bruno-api-tests/SKILL.md](skills/run-bruno-api-tests/SKILL.md) per [realworld/AGENTS.md](realworld/AGENTS.md) (status: documented).
 
 ---
 
@@ -157,7 +157,7 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** `playwright.config.ts`; `realworld/specs/e2e/playwright.base.ts`.
 
-**Basis:** `realworld/specs/e2e/playwright.base.ts`; analysis entry points.
+**Basis:** `realworld/specs/e2e/playwright.base.ts`; [ARCHITECTURE.md](ARCHITECTURE.md).
 
 **Check:** Import of `baseConfig` in `playwright.config.ts`; `bun run test:e2e` (status: documented).
 
@@ -169,9 +169,33 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 **Scope:** All repository paths and agent responses.
 
-**Basis:** Init guardrails; GUARDRAILS.md when present.
+**Basis:** Init guardrails; harness safety expectations in [AGENTS.md](AGENTS.md).
 
-**Check:** Review diffs for `.env`, tokens, and `jwtToken` literals used as real credentials.
+**Check:** Review diffs for `.env`, tokens, and live credential literals.
+
+---
+
+## RULE-15: Show API errors with `.error-messages` without breaking the form
+
+**Rule:** When the Conduit API returns client errors (for example 400, 401, 403), the SPA must surface messages in `.error-messages` and keep the page usable, as asserted in `realworld/specs/e2e/error-handling.spec.ts`.
+
+**Scope:** `src/app/**`; error and auth flows covered by shared E2E.
+
+**Basis:** [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md); `realworld/specs/e2e/error-handling.spec.ts`; [skills/add-e2e-api-error-test/SKILL.md](skills/add-e2e-api-error-test/SKILL.md).
+
+**Check:** `bun run test:e2e` with specs that mock API failures when `BROWSER_API` is true (status: documented).
+
+---
+
+## RULE-16: Treat any 2xx DELETE response as success in the SPA
+
+**Rule:** Article and comment delete flows in the UI must complete successfully when the backend returns a 2xx status including 200, not only 204, as covered by SPA route-mock tests in the shared suite.
+
+**Scope:** `src/app/**`; `realworld/specs/e2e/articles.spec.ts`; `realworld/specs/e2e/comments.spec.ts`.
+
+**Basis:** [GUIDELINES.md](GUIDELINES.md); [skills/add-spa-route-mock-test/SKILL.md](skills/add-spa-route-mock-test/SKILL.md).
+
+**Check:** Run relevant E2E with `BROWSER_API` enabled (status: documented).
 
 ---
 
@@ -179,10 +203,10 @@ Human-authored guidance in [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realwor
 
 | Gap | Consumer |
 |-----|----------|
-| Full text of [CLAUDE.md](CLAUDE.md), [realworld/CLAUDE.md](realworld/CLAUDE.md), [realworld/CONTRIBUTING.md](realworld/CONTRIBUTING.md) not supplied in evidence | Requirements; rule basis for contributor workflows |
+| Full text of `CLAUDE.md`, `realworld/CLAUDE.md`, `realworld/CONTRIBUTING.md` not supplied in evidence | Requirements; rule basis for contributor workflows |
 | `lint-staged` glob and formatter config not excerpted | RULE-09 exact staged file types |
-| Full `realworld/specs/e2e/helpers/config.ts` (TEST_MODE, BROWSER_API, EXTERNAL_API definitions) not excerpted | RULE-06; [GUIDELINES.md](GUIDELINES.md) |
-| Root CI may not run `bun run test` (Vitest) (inferred from automation notes) | RULE-08 enforcement in pipeline |
+| Full `realworld/specs/e2e/helpers/config.ts` (`TEST_MODE`, `BROWSER_API`, `EXTERNAL_API`) not excerpted | RULE-06; [GUIDELINES.md](GUIDELINES.md) |
+| Root CI may not run `bun run test` (Vitest) (inferred) | RULE-08 enforcement in pipeline |
 
 ---
 
