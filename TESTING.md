@@ -11,75 +11,78 @@ For agent entry points and the component map, see [AGENTS.md](AGENTS.md). For E2
 
 | Command | Purpose | Source | Status |
 |--------|---------|--------|--------|
-| `bun run test` | Vitest unit tests (colocated under `src/app`) | [package.json](package.json) | documented |
+| `bun run test` | Vitest unit tests under `src/` (colocated `*.spec.ts`) | [package.json](package.json) | documented |
+| `bunx vitest run <path>` | Single Vitest file or pattern | [package.json](package.json) (`vitest` via Bun) | documented |
 | `bun run test:coverage` | Vitest with coverage | [package.json](package.json) | documented |
 | `bun run test:ui` | Vitest UI mode | [package.json](package.json) | documented |
 | `bun run test:e2e` | Playwright E2E, excludes `@security` | [package.json](package.json), [.github/workflows/playwright.yml](.github/workflows/playwright.yml) | documented |
-| `bun run test:e2e:security` | Playwright specs tagged `@security` | [package.json](package.json), [.github/workflows/security-tests.yml](.github/workflows/security-tests.yml) | documented |
+| `bun run test:e2e:security` | Playwright specs tagged `@security` | [package.json](package.json), `.github/workflows/security-tests.yml` | documented |
+| `bun run test:e2e -- <path>` | One spec file or narrow subset | [package.json](package.json), [skills/run-focused-e2e-spec/SKILL.md](skills/run-focused-e2e-spec/SKILL.md) | documented |
 | `bun run build` | Production Angular build | [package.json](package.json) | documented |
 | `bun run format:check` | Prettier check (ts, html, css, json, md) | [package.json](package.json), [.github/workflows/lint.yml](.github/workflows/lint.yml) | documented |
 
-Run `bun run setup` before first use when the project README documents it (inferred from skill prerequisites).
+Run `bun run setup` when [package.json](package.json) documents install prerequisites before first use.
 
 ---
 
 ## Unit tests (Vitest)
 
-Angular service and feature tests live next to implementation code under `src/app`. [.github/workflows/playwright.yml](.github/workflows/playwright.yml), [.github/workflows/security-tests.yml](.github/workflows/security-tests.yml), and [.github/workflows/lint.yml](.github/workflows/lint.yml) in the supplied evidence do not invoke `bun run test`. Vitest is a **local** gate and may appear in proposed hooks per [HOOKS.md](HOOKS.md).
-
-**Workflow:** `skills/run-vitest-unit-tests/SKILL.md`
+Angular service and component tests live next to implementation code under `src/app` as `*.spec.ts`. Supplied root workflows [.github/workflows/playwright.yml](.github/workflows/playwright.yml), `.github/workflows/security-tests.yml`, and [.github/workflows/lint.yml](.github/workflows/lint.yml) do not invoke `bun run test`. Vitest is a **local** gate and may appear in proposed hooks per [HOOKS.md](HOOKS.md).
 
 **Typical commands:**
 
-- `bun run test` — default run
+- `bun run test` — full suite
+- `bunx vitest run <path-to-spec>` — focused file or glob after a localized change
 - `bun run test:coverage` — coverage report
 - `bun run test:ui` — interactive UI
 
-Implementation-focused guidance: [src/app/AGENTS.md](src/app/AGENTS.md).
+Component map and unit-test placement: [src/AGENTS.md](src/AGENTS.md), [src/app/AGENTS.md](src/app/AGENTS.md).
 
 ---
 
 ## End-to-end tests (Playwright)
 
-The shared suite lives under `realworld/specs/e2e/`. Root `playwright.config.ts` points at that tree and extends defaults from `realworld/specs/e2e/playwright.base.ts` (documented in [ARCHITECTURE.md](ARCHITECTURE.md)). The SPA under `src/app` is the system under test when you run root `test:e2e` scripts.
+The shared suite lives under `realworld/specs/e2e/`. Root `playwright.config.ts` extends `realworld/specs/e2e/playwright.base.ts` (see [ARCHITECTURE.md](ARCHITECTURE.md)). The Angular SPA under `src/` is the system under test; Playwright typically serves it at `http://localhost:4200` (inferred from harness analysis when `webServer` is configured).
 
-**Non-security suite (default CI E2E):**
+**Default (non-security) suite:**
 
-1. Start the dev server (commonly `bun run start` with `baseURL` such as `http://localhost:3000` per `skills/run-playwright-e2e-tests/SKILL.md`).
+1. Ensure the app is running or let Playwright start it per root config (commonly `bun run start`).
 2. `bun run test:e2e` — runs Playwright with `--grep-invert @security` per [package.json](package.json).
 
-**Skill:** `skills/run-playwright-e2e-tests/SKILL.md`  
 **CI:** [.github/workflows/playwright.yml](.github/workflows/playwright.yml)
 
 **Security-only suite:**
 
-- `bun run test:e2e:security` — runs specs tagged `@security` (for example XSS scenarios).
+- `bun run test:e2e:security` — specs tagged `@security` (for example XSS scenarios under `realworld/specs/e2e/`).
 
-**Skill:** `skills/run-playwright-security-e2e-tests/SKILL.md`  
-**CI:** [.github/workflows/security-tests.yml](.github/workflows/security-tests.yml)
+**CI:** `.github/workflows/security-tests.yml` (documented in analysis; not in root workflow excerpt for lint/playwright only).
 
-**Single file or filtered run (local iteration):** `skills/run-playwright-single-spec/SKILL.md`
+**Focused run (local iteration):**
 
-### UI and route contract (do not duplicate here)
+- `bun run test:e2e -- realworld/specs/e2e/<file>.spec.ts`
+- Workflow: [skills/run-focused-e2e-spec/SKILL.md](skills/run-focused-e2e-spec/SKILL.md)
 
-Implementations must match the canonical selector, route, `localStorage` (`jwtToken`), and debug surface defined in `realworld/specs/e2e/SELECTORS.md`. REST and SPA contracts are indexed in [CONTRACTS.md](CONTRACTS.md). Domain vocabulary for scenarios is in [DOMAIN.md](DOMAIN.md).
+### UI and route contract
+
+Match selectors, routes, `localStorage` key `jwtToken`, and debug surface in `realworld/specs/e2e/SELECTORS.md` (name in code; full contract indexed in [CONTRACTS.md](CONTRACTS.md)). Domain vocabulary: [DOMAIN.md](DOMAIN.md).
 
 ### Extending E2E coverage
 
 | Scenario | Skill |
 |----------|--------|
-| Articles, auth, comments domain flows | `skills/add-e2e-domain-spec/SKILL.md` |
-| SPA `page.route()` and 2xx DELETE handling | `skills/add-spa-route-mock-test/SKILL.md` |
-| API error responses and `.error-messages` | `skills/add-e2e-api-error-test/SKILL.md` |
-| Feeds, tags, pagination, follow, settings | `skills/add-e2e-navigation-social-spec/SKILL.md` |
+| SPA load, core routes, optional live API | [realworld/skills/add-e2e-health-spec/SKILL.md](realworld/skills/add-e2e-health-spec/SKILL.md) |
+| Null `image` / `bio` and default avatar | [realworld/skills/add-e2e-null-fields-spec/SKILL.md](realworld/skills/add-e2e-null-fields-spec/SKILL.md) |
+| Invalid `jwtToken` on reload | [realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md](realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md) |
+| Register, login, logout, validation | [realworld/skills/add-e2e-auth-flow-spec/SKILL.md](realworld/skills/add-e2e-auth-flow-spec/SKILL.md) |
+| Article create, edit, delete, favorite | [realworld/skills/add-e2e-article-crud-spec/SKILL.md](realworld/skills/add-e2e-article-crud-spec/SKILL.md) |
 
-Conformance pack layout and helpers: [realworld/AGENTS.md](realworld/AGENTS.md).
+Conformance pack layout, helpers, and API runners: [realworld/AGENTS.md](realworld/AGENTS.md). Feature routes versus specs: [src/app/features/AGENTS.md](src/app/features/AGENTS.md).
 
 ---
 
 ## Production build
 
-`bun run build` runs the production Angular build from [package.json](package.json). Use it after substantive frontend changes and before release-oriented work. Root CI may run `build` on deploy paths (inferred from analysis); confirm in workflows beyond those cited here.
+`bun run build` runs the production Angular build from [package.json](package.json). Use it after substantive frontend changes and before release-oriented work. Root deploy workflows were not fully excerpted in harness evidence (coverage gap).
 
 ---
 
@@ -91,17 +94,15 @@ Conformance pack layout and helpers: [realworld/AGENTS.md](realworld/AGENTS.md).
 
 ## RealWorld pack: API and documentation
 
-These checks validate the specification tree and REST backends. They are separate from root `bun run test` and `test:e2e` against the SPA.
+These checks validate the specification tree and REST backends. They are separate from root `bun run test` and `bun run test:e2e` against the SPA.
 
 | Area | Where to start |
 |------|----------------|
-| Pack workflows (docs, API runners, E2E layout) | [realworld/AGENTS.md](realworld/AGENTS.md) |
-| Documentation site (Starlight under `realworld/docs`) | `skills/run-realworld-docs-dev/SKILL.md` |
-| Hurl suite against a Conduit host | `skills/run-hurl-api-tests/SKILL.md` |
-| Bruno collection against a Conduit host | `skills/run-bruno-api-tests/SKILL.md` |
-| Bruno vs Hurl drift before commit or in pack CI | `skills/check-bruno-hurl-sync/SKILL.md` |
+| Pack workflows (OpenAPI, Hurl, Bruno, E2E layout) | [realworld/AGENTS.md](realworld/AGENTS.md) |
+| OpenAPI and runner scripts | `realworld/specs/api/` (see [realworld/AGENTS.md](realworld/AGENTS.md)) |
+| Documentation site under `realworld/docs` | [realworld/AGENTS.md](realworld/AGENTS.md) |
 
-OpenAPI and runner details live under `realworld/specs/api/`; see [realworld/AGENTS.md](realworld/AGENTS.md). Exact `make` targets under `realworld/` were not fully excerpted in harness evidence (coverage gap).
+Exact `make` targets and Hurl/Bruno `HOST` defaults were not fully excerpted (coverage gap).
 
 ---
 
@@ -111,32 +112,32 @@ OpenAPI and runner details live under `realworld/specs/api/`; see [realworld/AGE
 |---------|-------|---------------------|
 | `bun run format:check` | Yes | [.github/workflows/lint.yml](.github/workflows/lint.yml) |
 | `bun run test` | Yes | **Not evidenced** in supplied root workflows |
-| `bun run build` | Yes | Inferred on deploy paths; confirm beyond excerpts |
-| `bun run test:e2e` | Yes (SPA running) | [.github/workflows/playwright.yml](.github/workflows/playwright.yml) |
-| `bun run test:e2e:security` | Yes (SPA running) | [.github/workflows/security-tests.yml](.github/workflows/security-tests.yml) |
+| `bun run build` | Yes | Not fully excerpted |
+| `bun run test:e2e` | Yes (SPA available) | [.github/workflows/playwright.yml](.github/workflows/playwright.yml) |
+| `bun run test:e2e:security` | Yes (SPA available) | `.github/workflows/security-tests.yml` (documented in analysis) |
 
-Pack-only CI (Bruno check, docs deploy) runs under `realworld/.github/workflows/` and is outside the root table above; see [realworld/AGENTS.md](realworld/AGENTS.md).
+Pack-only CI (Bruno check, docs deploy, CodeQL) runs under `realworld/.github/workflows/`; see [realworld/AGENTS.md](realworld/AGENTS.md).
 
 ---
 
 ## Suggested check order (local)
 
-1. `bun run format:check` — fast style gate (also relevant to [HOOKS.md](HOOKS.md) proposed hooks).
-2. `bun run test` — unit tests.
+1. `bun run format:check` — fast style gate ([HOOKS.md](HOOKS.md) proposed hooks).
+2. `bun run test` or `bunx vitest run <path>` — unit tests after localized edits.
 3. `bun run build` — compile gate.
-4. With the app running: `bun run test:e2e`, then `bun run test:e2e:security` when security specs matter.
+4. With the app available: `bun run test:e2e`, then `bun run test:e2e:security` when security specs matter; use `bun run test:e2e -- <path>` for a single spec.
 
-For backend or full-stack setups that use `EXTERNAL_API`, follow [GUIDELINES.md](GUIDELINES.md) before interpreting skipped or failing specs.
+When specs skip on `!BROWSER_API` or `!EXTERNAL_API`, read [GUIDELINES.md](GUIDELINES.md) before treating failures as regressions.
 
 ---
 
 ## Coverage gaps
 
-- Root CI in the supplied evidence does not run `bun run test` (Vitest). Treat unit tests as a local and proposed-hook obligation until a workflow is added.
-- `lint-staged` rules invoked by the active pre-commit hook are not excerpted in harness evidence.
-- A Playwright HTML report script (for example `test:e2e:report`) is referenced in `skills/run-playwright-e2e-tests/SKILL.md` but was not verified in the root [package.json](package.json) excerpt for this file.
-- Full API runner commands and `HOST` / `API_BASE` defaults: see [realworld/AGENTS.md](realworld/AGENTS.md) and `realworld/specs/api/` paths.
+- Root CI in supplied evidence does not run `bun run test` (Vitest). Treat unit tests as local and proposed-hook obligation until a workflow is added.
+- `lint-staged` rules for the active Husky pre-commit hook are not excerpted in harness evidence.
+- Full `playwright.config.ts` / `playwright.base.ts` `webServer` and `baseURL` values were not excerpted; confirm before debugging E2E connectivity.
 - Whether root deploy workflow runs `bun run build` on every PR was not fully excerpted.
+- RealWorld Hurl/Bruno runner commands and environment defaults: [realworld/AGENTS.md](realworld/AGENTS.md) and `realworld/specs/api/`.
 
-Harness planning context: [platform/init/INIT.md](platform/init/INIT.md). Binding constraints for agents: [RULES.md](RULES.md).
+Harness planning context: [platform/init/INIT.md](platform/init/INIT.md). Binding constraints: [RULES.md](RULES.md).
 <!-- init-agent:end -->

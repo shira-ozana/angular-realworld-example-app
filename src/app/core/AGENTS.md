@@ -9,9 +9,9 @@ Parent map: [src/app/AGENTS.md](../AGENTS.md). Repository entry: [AGENTS.md](../
 
 | Component | Path | Responsibility |
 | --------- | ---- | -------------- |
-| Auth | `auth/` | Login and register UI, `UserService` session lifecycle, `JwtService` and `localStorage` key `jwtToken`, `IfAuthenticatedDirective` |
-| Interceptors | `interceptors/` | `apiInterceptor` base URL, `tokenInterceptor` `Authorization: Token …`, `errorInterceptor` 401 purge and normalized error bodies |
-| Layout | `layout/` | `HeaderComponent` navbar driven by `authState$` / `currentUser$`, `FooterComponent` |
+| Auth | `auth/` | Login and register UI (`AuthComponent`), `UserService` session lifecycle, `JwtService` and `localStorage` key `jwtToken`, `IfAuthenticatedDirective` |
+| Interceptors | `interceptors/` | `apiInterceptor` prefixes `https://api.realworld.show/api`, `tokenInterceptor` sets `Authorization: Token …`, `errorInterceptor` 401 purge (except `GET /user`) and normalized error bodies |
+| Layout | `layout/` | `HeaderComponent` navbar from `authState$` / `currentUser$`, `FooterComponent` shell footer |
 | Models | `models/` | `Errors`, `LoadingState` shared by core and features |
 
 ## Read first
@@ -19,40 +19,46 @@ Parent map: [src/app/AGENTS.md](../AGENTS.md). Repository entry: [AGENTS.md](../
 | Topic | Files |
 | ----- | ----- |
 | JWT storage and header | `auth/services/jwt.service.ts`, `interceptors/token.interceptor.ts` |
-| Session states and `/user` | `auth/services/user.service.ts` (states: `loading`, `authenticated`, `unauthenticated`, `unavailable`; 4XX clears token; 5XX retries) |
-| Login / register | `auth/auth.component.ts`, `auth/auth.component.html` |
+| Session states and `/user` | `auth/services/user.service.ts` — states `loading`, `authenticated`, `unauthenticated`, `unavailable`; 4XX clears token; 5XX keeps token and retries |
+| Login / register | `auth/auth.component.ts`, `auth/auth.component.html` (`app-list-errors`, form `name` attributes per E2E) |
 | Global HTTP behavior | `interceptors/api.interceptor.ts`, `interceptors/error.interceptor.ts` |
-| Shell UI | `layout/header.component.ts`, `layout/header.component.html` |
+| Shell UI | `layout/header.component.ts`, `layout/header.component.html` (`.navbar`, `.navbar-brand`, auth nav branches) |
 | Shared types | `auth/user.model.ts`, `models/errors.model.ts`, `models/loading-state.model.ts` |
-| E2E contracts | [SELECTORS.md](../../../realworld/specs/e2e/SELECTORS.md) (`jwtToken`, navbar selectors, `Token` header aligns with [CONTRACTS.md](../../../CONTRACTS.md)) |
+| Route guards in templates | `auth/if-authenticated.directive.ts` |
+| External contract | [CONTRACTS.md](../../../CONTRACTS.md) (`Token` scheme); UI selectors and `jwtToken` in `realworld/specs/e2e/SELECTORS.md` |
 
-Auth bootstrap and mid-session 401 handling are split: `GET /user` errors are handled in `UserService`; other endpoints use `errorInterceptor` to call `purgeAuth()` on 401 (see comments in `user.service.ts` and `error.interceptor.ts`).
+`GET /user` errors are handled in `UserService` (4XX vs 5XX). Other endpoints rely on `errorInterceptor` to call `purgeAuth()` on 401 (see comments in `user.service.ts` and `error.interceptor.ts`).
 
 ## Use these skills
 
 **From the repository (apply here)**
 
-- **run-vitest-unit-tests** — Unit tests under `auth/` (for example `auth/services/jwt.service.spec.ts`). Details and command status: [TESTING.md](../../../TESTING.md).
-- **add-e2e-spa-invalid-token-spec** — Invalid `jwtToken` in `localStorage`, reload, unauthenticated UI; see [SKILL.md](../../../realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md) when changing purge or token persistence behavior.
+- [add-e2e-spa-invalid-token-spec](../../../realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md) — After changes to `purgeAuth`, `JwtService`, or invalid-token handling on reload.
+- [add-e2e-auth-flow-spec](../../../realworld/skills/add-e2e-auth-flow-spec/SKILL.md) — After login, register, logout, or navbar auth UI changes.
+- [run-focused-e2e-spec](../../../skills/run-focused-e2e-spec/SKILL.md) — Run `realworld/specs/e2e/auth.spec.ts` without the full E2E suite.
 
-**Related E2E (auth UI)**
+**Related E2E**
 
-- [add-e2e-health-spec](../../../realworld/skills/add-e2e-health-spec/SKILL.md) — Navbar and login/register routes.
-- Conformance pack overview: [realworld/AGENTS.md](../../../realworld/AGENTS.md).
+- [add-e2e-health-spec](../../../realworld/skills/add-e2e-health-spec/SKILL.md) — Navbar and `/login`, `/register` smoke checks.
+- Conformance pack: [realworld/AGENTS.md](../../../realworld/AGENTS.md).
+
+Unit test commands and status: [TESTING.md](../../../TESTING.md) (Vitest on `src/**/*.spec.ts`, including `auth/services/*.spec.ts` when present).
 
 ## Rules that apply
 
-- [RULES.md](../../../RULES.md) — Harness-only edits, cite evidence paths, explicit command status.
-- Patterns for services and interceptors: [GUIDELINES.md](../../../GUIDELINES.md).
-- API and selector contracts: [CONTRACTS.md](../../../CONTRACTS.md), [DOMAIN.md](../../../DOMAIN.md) for auth and user terms.
+- [RULES.md](../../../RULES.md) — Harness-only edits, no secrets, match existing Angular patterns.
+- [GUIDELINES.md](../../../GUIDELINES.md) — Service and interceptor patterns.
+- [CONTRACTS.md](../../../CONTRACTS.md), [DOMAIN.md](../../../DOMAIN.md) — API auth and user vocabulary.
+
+System context: [ARCHITECTURE.md](../../../ARCHITECTURE.md).
 
 ## Check a change
 
-Run Vitest for core auth units (documented in `package.json` via [TESTING.md](../../../TESTING.md)):
+Narrow unit check (documented in [TESTING.md](../../../TESTING.md)):
 
 ```bash
 bun run test -- src/app/core/auth
 ```
 
-After interceptor or `UserService` auth-state changes, run the invalid-token E2E skill verification path in [TESTING.md](../../../TESTING.md) (`bun run test:e2e` filtered to `realworld/specs/e2e/auth.spec.ts` when documented).
+After interceptor or `UserService` auth-state changes, run auth E2E per [run-focused-e2e-spec](../../../skills/run-focused-e2e-spec/SKILL.md) (documented: `bun run test:e2e` with path `realworld/specs/e2e/auth.spec.ts`). Invalid-token cases: [add-e2e-spa-invalid-token-spec](../../../realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md).
 <!-- init-agent:end -->

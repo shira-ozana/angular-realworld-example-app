@@ -20,14 +20,28 @@ The `src/app/features` folder holds three lazy-loaded feature areas: **article**
 | settings | `settings/settings.component.ts`, `settings/settings.component.html` |
 | Cross-feature | `article/models/article.model.ts` and `comment.model.ts` import `Profile` from `profile/models/profile.model.ts` |
 
-### Routes (evidence)
+### Routes (RealWorld E2E alignment)
 
 | Route pattern | Feature | Notes |
 |---------------|---------|--------|
+| `/` (home, Global Feed, Your Feed, tag feeds) | article | `ArticleListConfig` and `ArticlesService.query`; pagination via `.article-preview` (inferred from E2E helpers). |
+| `/editor`, `/editor/:slug` | article | Create and edit; publish navigates to `/article/:slug` per `realworld/specs/e2e/helpers/articles.ts` (analysis). |
+| `/article/:slug` | article | Detail, comments, author actions; selectors in [CONTRACTS.md](../../../CONTRACTS.md) UI contract. |
 | `/profile/:username` | profile | `ProfileComponent` with default child `profile-articles.component` |
-| `/profile/:username/favorites` | profile | `profile-favorites.component` |
-| `/settings` | settings | Settings page; E2E in `realworld/specs/e2e/settings.spec.ts` |
-| `/article/:slug`, `/editor`, home feeds | article | Article CRUD and list config via `ArticleListConfig`; E2E in [realworld/specs/e2e/articles.spec.ts](../../../realworld/specs/e2e/articles.spec.ts) |
+| `/profile/:username/favorites` | profile | `profile-favorites.component`; `favorited` filter on article list |
+| `/settings` | settings | Settings page; successful update redirects to `/profile/:username` in `settings.component.ts` |
+| `/tag/:tag` | article | Tag-filtered lists (exercised with navigation E2E; `realworld/specs/e2e/navigation.spec.ts`) |
+
+### E2E specs by feature
+
+| Feature | Primary spec (linked) | Also relevant (`code`, no excerpt in INIT) |
+|---------|----------------------|---------------------------------------------|
+| article (CRUD, editor, favorite) | [realworld/specs/e2e/articles.spec.ts](../../../realworld/specs/e2e/articles.spec.ts) | `realworld/specs/e2e/comments.spec.ts`, `realworld/specs/e2e/navigation.spec.ts` |
+| article (auth guard on editor) | — | `realworld/specs/e2e/auth.spec.ts` (unauthenticated `/editor`) |
+| profile (follow, favorited tab, feeds) | [realworld/specs/e2e/social.spec.ts](../../../realworld/specs/e2e/social.spec.ts) | `realworld/specs/e2e/navigation.spec.ts` (empty profile, pagination) |
+| settings (bio, image, redirect) | [realworld/specs/e2e/settings.spec.ts](../../../realworld/specs/e2e/settings.spec.ts) | `realworld/specs/e2e/null-fields.spec.ts` (null image/bio on settings inputs) |
+
+Run one file with [skills/run-focused-e2e-spec/SKILL.md](../../../skills/run-focused-e2e-spec/SKILL.md). Full matrix: [TESTING.md](../../../TESTING.md).
 
 ### HTTP surfaces (feature-owned)
 
@@ -41,30 +55,33 @@ The `src/app/features` folder holds three lazy-loaded feature areas: **article**
 
 ## Use these skills
 
-No skills live under `src/app/features/skills/`. For conformance work that touches these routes and APIs, use the **realworld** E2E skills:
+No skills live under `src/app/features/skills/`. For conformance work on these routes and APIs, use **realworld** and root skills:
 
 | Skill | When to use |
 |-------|-------------|
+| [add-e2e-article-crud-spec](../../../realworld/skills/add-e2e-article-crud-spec/SKILL.md) | Create, edit, delete, favorite, and `/editor` flows in [articles.spec.ts](../../../realworld/specs/e2e/articles.spec.ts). |
+| [add-e2e-auth-flow-spec](../../../realworld/skills/add-e2e-auth-flow-spec/SKILL.md) | Register, login, logout, and editor access before article or settings changes. |
 | [add-e2e-null-fields-spec](../../../realworld/skills/add-e2e-null-fields-spec/SKILL.md) | Profile image/bio null handling and `/settings` form values. |
-| [add-e2e-health-spec](../../../realworld/skills/add-e2e-health-spec/SKILL.md) | Smoke checks for core routes including flows that reach article and auth UI. |
-| [add-e2e-spa-invalid-token-spec](../../../realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md) | Invalid `jwtToken` behavior before exercising protected editor or settings flows. |
+| [add-e2e-health-spec](../../../realworld/skills/add-e2e-health-spec/SKILL.md) | Smoke checks for core routes including article and auth UI. |
+| [add-e2e-spa-invalid-token-spec](../../../realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md) | Invalid `jwtToken` before protected editor or settings flows. |
+| [run-focused-e2e-spec](../../../skills/run-focused-e2e-spec/SKILL.md) | Run a single Playwright file after a localized feature change. |
 
-Broader Playwright and API workflows are listed in [realworld/AGENTS.md](../../../realworld/AGENTS.md). Unit test workflow: [TESTING.md](../../../TESTING.md) (shared `run-vitest-unit-tests` from root).
+Broader Playwright and API workflows: [realworld/AGENTS.md](../../../realworld/AGENTS.md). Unit tests: [TESTING.md](../../../TESTING.md).
 
 ## Rules that apply
 
 - [RULES.md](../../../RULES.md) — harness edits, evidence paths, command status.
-- [GUIDELINES.md](../../../GUIDELINES.md) — patterns without contradicting realworld specs.
-- UI selectors and routes for E2E must match `realworld/specs/e2e/SELECTORS.md` (linked from [CONTRACTS.md](../../../CONTRACTS.md)).
+- [GUIDELINES.md](../../../GUIDELINES.md) — Vitest vs Playwright; `BROWSER_API` / `EXTERNAL_API` from `realworld/specs/e2e/helpers/config.ts`.
+- E2E selectors and routes must match the UI contract in [CONTRACTS.md](../../../CONTRACTS.md).
 
 ## Check a change
 
 | Change type | Verification | Status |
 |-------------|--------------|--------|
 | article UI or `ArticlesService` / comments | `bun run test:e2e -- realworld/specs/e2e/articles.spec.ts` | documented |
-| settings or null image/bio | `bun run test:e2e -- realworld/specs/e2e/settings.spec.ts` and null-fields spec when applicable | documented |
-| profile follow/lists | social/navigation E2E under realworld (see [TESTING.md](../../../TESTING.md)) | documented |
+| settings or null image/bio | `bun run test:e2e -- realworld/specs/e2e/settings.spec.ts`; add null-fields spec when applicable | documented |
+| profile follow, favorited tab, social feeds | `bun run test:e2e -- realworld/specs/e2e/social.spec.ts` | documented |
 | isolated TS logic | `bun run test` per [TESTING.md](../../../TESTING.md) | documented |
 
-For architecture and data flow across features, see [ARCHITECTURE.md](../../../ARCHITECTURE.md). Repository entry point: [AGENTS.md](../../../AGENTS.md). INIT report: [platform/init/INIT.md](../../../platform/init/INIT.md).
+Architecture and data flow: [ARCHITECTURE.md](../../../ARCHITECTURE.md). Repository entry: [AGENTS.md](../../../AGENTS.md). INIT report: [platform/init/INIT.md](../../../platform/init/INIT.md). Hooks: [HOOKS.md](../../../HOOKS.md).
 <!-- init-agent:end -->

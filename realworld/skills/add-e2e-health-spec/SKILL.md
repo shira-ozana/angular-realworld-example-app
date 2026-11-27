@@ -14,7 +14,7 @@
 
 ## Steps
 1. Open or create realworld/specs/e2e/health.spec.ts.
-2. Import test, expect from @playwright/test and EXTERNAL_API from ./helpers/config.
+2. Import test and expect from @playwright/test and EXTERNAL_API from ./helpers/config.
 3. Assert nav.navbar, a.navbar-brand, and login/register routes per SELECTORS.md.
 4. Gate demo API reachability tests with test.skip(!EXTERNAL_API, ...) when using https://api.realworld.show/api.
 
@@ -28,5 +28,5 @@
 - [`playwright.config.ts`](../../../playwright.config.ts)
 
 ## Verification
-- bun run test:e2e -- realworld/specs/e2e/health.spec.ts (status: documented; path filter inferred)
+- bun run test:e2e -- realworld/specs/e2e/health.spec.ts — status: documented
 <!-- init-agent:end -->

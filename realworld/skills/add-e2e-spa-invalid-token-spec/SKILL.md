@@ -30,5 +30,5 @@
 - [`realworld/specs/e2e/helpers/config.ts`](../../specs/e2e/helpers/config.ts)
 
 ## Verification
-- bun run test:e2e -- realworld/specs/e2e/auth.spec.ts (status: documented; path filter inferred)
+- bun run test:e2e -- realworld/specs/e2e/auth.spec.ts — status: documented
 <!-- init-agent:end -->

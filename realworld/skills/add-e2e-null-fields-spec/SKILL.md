@@ -29,5 +29,5 @@
 - [`realworld/specs/e2e/helpers/profile.ts`](../../specs/e2e/helpers/profile.ts)
 
 ## Verification
-- bun run test:e2e -- realworld/specs/e2e/null-fields.spec.ts (status: documented; path filter inferred)
+- bun run test:e2e -- realworld/specs/e2e/null-fields.spec.ts — status: documented
 <!-- init-agent:end -->
