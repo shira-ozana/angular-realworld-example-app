@@ -26,6 +26,7 @@
 - [`realworld/specs/e2e/SELECTORS.md`](../../specs/e2e/SELECTORS.md)
 - [`realworld/specs/e2e/helpers/config.ts`](../../specs/e2e/helpers/config.ts)
 - [`playwright.config.ts`](../../../playwright.config.ts)
+- [`realworld/skills/add-e2e-health-spec/SKILL.md`](SKILL.md)
 
 ## Verification
 - bun run test:e2e -- realworld/specs/e2e/health.spec.ts — status: documented

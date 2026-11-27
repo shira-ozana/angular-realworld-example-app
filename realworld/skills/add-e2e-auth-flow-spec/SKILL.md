@@ -30,6 +30,7 @@
 - [`realworld/specs/e2e/helpers/auth.ts`](../../specs/e2e/helpers/auth.ts)
 - [`realworld/specs/e2e/SELECTORS.md`](../../specs/e2e/SELECTORS.md)
 - [`package.json`](../../../package.json)
+- [`realworld/skills/add-e2e-auth-flow-spec/SKILL.md`](SKILL.md)
 
 ## Verification
 - bun run test:e2e -- realworld/specs/e2e/auth.spec.ts — status: documented

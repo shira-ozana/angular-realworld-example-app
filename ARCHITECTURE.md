@@ -7,7 +7,7 @@ The repository delivers a Conduit (RealWorld) social blogging experience in a br
 
 ### Root orchestration
 
-The repository root connects the SPA, Vitest, and Playwright. `package.json` defines `test`, `test:e2e`, `test:e2e:security`, `build`, and format scripts. `playwright.config.ts` merges shared E2E defaults with a local web server and `baseURL`. [TESTING.md](TESTING.md) lists verification commands. [HOOKS.md](HOOKS.md) documents active and proposed git hooks. Binding constraints are in [RULES.md](RULES.md).
+The repository root connects the SPA, Vitest, and Playwright. [package.json](package.json) defines `test`, `test:e2e`, `test:e2e:security`, `build`, and format scripts. [playwright.config.ts](playwright.config.ts) merges shared E2E defaults with a local web server and `baseURL`. [TESTING.md](TESTING.md) lists verification commands. [HOOKS.md](HOOKS.md) documents active and proposed git hooks. Binding constraints are in [RULES.md](RULES.md).
 
 **Entry points:** `bun run test` runs Vitest unit specs under `src/app`. `bun run test:e2e` runs Playwright against `realworld/specs/e2e` and excludes `@security` tags. `bun run build` produces a production Angular build.
 
@@ -17,7 +17,7 @@ The repository root connects the SPA, Vitest, and Playwright. `package.json` def
 
 The `src` tree holds the Angular workspace. [src/AGENTS.md](src/AGENTS.md) maps components and routes agents to [src/app/AGENTS.md](src/app/AGENTS.md), [src/app/core/AGENTS.md](src/app/core/AGENTS.md), and [src/app/features/AGENTS.md](src/app/features/AGENTS.md).
 
-**Entry points:** Application bootstrap and build targets use root `package.json` scripts (inferred).
+**Entry points:** Application bootstrap and build targets use root [package.json](package.json) scripts (inferred).
 
 **Dependencies:** The SPA does not import `realworld` runtime application code.
 
@@ -25,11 +25,11 @@ The `src` tree holds the Angular workspace. [src/AGENTS.md](src/AGENTS.md) maps 
 
 The Angular application implements Conduit flows: authentication, articles, comments, profiles, settings, and feeds. Route definitions live in `src/app/app.routes.ts`. Local guidance is in [src/app/AGENTS.md](src/app/AGENTS.md). Unit and E2E verification commands are in [TESTING.md](TESTING.md).
 
-**Entry points:** The dev server starts for E2E per `playwright.config.ts` and [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts). E2E uses `http://localhost:4200` as the app host (inferred). `bun run test` runs colocated `*.spec.ts` files under `src/app`.
+**Entry points:** The dev server starts for E2E per [playwright.config.ts](playwright.config.ts) and [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts). E2E uses `http://localhost:4200` as the app host (inferred). `bun run test` runs colocated `*.spec.ts` files under `src/app`.
 
-**Interfaces:** The SPA must expose routes and DOM selectors from [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) (see [CONTRACTS.md](CONTRACTS.md)). The client stores the session JWT in `localStorage` under key `jwtToken`. Implementations may expose `window.__conduit_debug__` for E2E diagnostics.
+**Interfaces:** The SPA must expose routes and DOM selectors from `realworld/specs/e2e/SELECTORS.md` (see [CONTRACTS.md](CONTRACTS.md)). The client stores the session JWT in `localStorage` under key `jwtToken`. Implementations may expose `window.__conduit_debug__` for E2E diagnostics.
 
-**Dependencies:** HTTP client calls go to a configurable API base. E2E helpers default to `https://api.realworld.show/api` via [realworld/specs/e2e/helpers/config.ts](realworld/specs/e2e/helpers/config.ts).
+**Dependencies:** HTTP client calls go to a configurable API base. E2E helpers default to `https://api.realworld.show/api` via `realworld/specs/e2e/helpers/config.ts`.
 
 ### `src/app/core`
 
@@ -53,7 +53,7 @@ The `realworld` tree defines how implementers prove API and frontend compliance.
 
 **Entry points:** Root `test:e2e` and `test:e2e:security` point Playwright at `realworld/specs/e2e`. `realworld/specs/api/run-api-tests-bruno.sh` and `realworld/specs/api/run-api-tests-hurl.sh` run API contract tests. Docs dev is documented in [realworld/AGENTS.md](realworld/AGENTS.md).
 
-**Interfaces:** OpenAPI lists server URL `https://api.realworld.show/api`. Protected calls use `Authorization: Token <jwt>`. E2E helpers call paths such as `/users`, `/users/login`, `/user`, `/articles`, and `/profiles/{username}/follow`. Flags `API_BASE`, `BROWSER_API`, `EXTERNAL_API`, and `TEST_MODE` live in [realworld/specs/e2e/helpers/config.ts](realworld/specs/e2e/helpers/config.ts).
+**Interfaces:** OpenAPI lists server URL `https://api.realworld.show/api`. Protected calls use `Authorization: Token <jwt>`. E2E helpers call paths such as `/users`, `/users/login`, `/user`, `/articles`, and `/profiles/{username}/follow`. Flags `API_BASE`, `BROWSER_API`, `EXTERNAL_API`, and `TEST_MODE` live in `realworld/specs/e2e/helpers/config.ts`.
 
 **Dependencies:** Playwright, Bruno CLI, Hurl CLI, Astro, and Bun for generators. API tests assume a reachable backend at `HOST` (default `http://localhost:8000`), not the SPA process.
 
@@ -62,8 +62,8 @@ The `realworld` tree defines how implementers prove API and frontend compliance.
 1. A user opens the SPA. The router loads a component for a path from `src/app/app.routes.ts`.
 2. Auth flows post credentials to backend login or register endpoints. The SPA stores `jwtToken` in `localStorage` on success.
 3. Authenticated HTTP calls pass through interceptors in `src/app/core`. They attach `Authorization: Token` with the JWT. Article, comment, profile, and favorite actions map to OpenAPI paths in [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml).
-4. The SPA sends requests to the configured API base. E2E uses `API_BASE` from [realworld/specs/e2e/helpers/config.ts](realworld/specs/e2e/helpers/config.ts) unless the environment overrides it (inferred).
-5. Playwright at the repository root extends [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts). `playwright.config.ts` starts the SPA web server and sets `baseURL` to `http://localhost:4200` (inferred).
+4. The SPA sends requests to the configured API base. E2E uses `API_BASE` from `realworld/specs/e2e/helpers/config.ts` unless the environment overrides it (inferred).
+5. Playwright at the repository root extends [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts). [playwright.config.ts](playwright.config.ts) starts the SPA web server and sets `baseURL` to `http://localhost:4200` (inferred).
 6. When `EXTERNAL_API` is true, helpers register users and seed articles via direct HTTP before UI steps.
 7. When `BROWSER_API` is true, specs intercept browser routes with `page.route` to assert client HTTP handling.
 8. `TEST_MODE` and related flags skip or branch tests for SPA-only, API-backed, or mixed setups ([GUIDELINES.md](GUIDELINES.md)).
@@ -76,8 +76,8 @@ The `realworld` tree defines how implementers prove API and frontend compliance.
 |-----------|------|----------|
 | Conduit REST API | Backend for auth, articles, comments, profiles, tags | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
 | Token security scheme | API key in `Authorization` header as `Token <jwt>` | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
-| Playwright host config | Root merge of `baseConfig` with SPA web server at localhost:4200 | `playwright.config.ts`, [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts) |
-| E2E mode flags | `API_BASE`, `BROWSER_API`, `EXTERNAL_API`, `TEST_MODE` | [realworld/specs/e2e/helpers/config.ts](realworld/specs/e2e/helpers/config.ts) |
+| Playwright host config | Root merge of `baseConfig` with SPA web server at localhost:4200 | [playwright.config.ts](playwright.config.ts), [realworld/specs/e2e/playwright.base.ts](realworld/specs/e2e/playwright.base.ts) |
+| E2E mode flags | `API_BASE`, `BROWSER_API`, `EXTERNAL_API`, `TEST_MODE` | `realworld/specs/e2e/helpers/config.ts` |
 | SPA route table | Login, register, editor, article, settings, profile paths | `src/app/app.routes.ts` |
 | Bruno CLI | `bun x @usebruno/cli run` with `--env-var host=$HOST` | `realworld/specs/api/run-api-tests-bruno.sh` |
 | Hurl CLI | `hurl --test` with `--variable host` and `--variable uid` | `realworld/specs/api/run-api-tests-hurl.sh` |
@@ -86,5 +86,5 @@ The `realworld` tree defines how implementers prove API and frontend compliance.
 
 ## Gaps
 
-The evidence did not include full contents of [realworld/specs/e2e/helpers/config.ts](realworld/specs/e2e/helpers/config.ts) for exact `TEST_MODE` parsing (Requirements, Architect). `realworld/specs/e2e/helpers/debug.ts`, `profile.ts`, and `setup.ts` were not excerpted (Architect). Several E2E specs (`url-navigation.spec.ts`, `user-fetch-errors.spec.ts`, `xss-security.spec.ts`) lack full excerpts; security runs are documented in [TESTING.md](TESTING.md). OpenAPI excerpt may be truncated; favorites, tags, and delete-comment schemas may extend beyond supplied evidence (Requirements). The root `playwright.config.ts` merge with `baseConfig` and exact `webServer` settings are inferred, not shown in excerpts (Architect). `realworld/Makefile` targets beyond `bruno-check` are partial in evidence (Requirements). CI may not run `bun run test` (Vitest); see [TESTING.md](TESTING.md). Whether `src/app` imports `realworld/assets/theme/styles.css` directly is not confirmed (Architect). E2E skills for health, null-fields, and invalid-token cases are in [realworld/skills/add-e2e-health-spec/SKILL.md](realworld/skills/add-e2e-health-spec/SKILL.md), [realworld/skills/add-e2e-null-fields-spec/SKILL.md](realworld/skills/add-e2e-null-fields-spec/SKILL.md), and [realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md](realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md). Init status and harness coverage are in [platform/init/INIT.md](platform/init/INIT.md).
+The evidence did not include full contents of `realworld/specs/e2e/helpers/config.ts` for exact `TEST_MODE` parsing (Requirements, Architect). `realworld/specs/e2e/helpers/debug.ts`, `profile.ts`, and `setup.ts` were not excerpted (Architect). Several E2E specs (`url-navigation.spec.ts`, `user-fetch-errors.spec.ts`, `xss-security.spec.ts`) lack full excerpts; security runs are documented in [TESTING.md](TESTING.md). OpenAPI excerpt may be truncated; favorites, tags, and delete-comment schemas may extend beyond supplied evidence (Requirements). The root [playwright.config.ts](playwright.config.ts) merge with `baseConfig` and exact `webServer` settings are inferred, not shown in excerpts (Architect). `realworld/Makefile` targets beyond `bruno-check` are partial in evidence (Requirements). CI may not run `bun run test` (Vitest); see [TESTING.md](TESTING.md). Whether `src/app` imports `realworld/assets/theme/styles.css` directly is not confirmed (Architect). E2E skills for health, null-fields, and invalid-token cases are in [realworld/skills/add-e2e-health-spec/SKILL.md](realworld/skills/add-e2e-health-spec/SKILL.md), [realworld/skills/add-e2e-null-fields-spec/SKILL.md](realworld/skills/add-e2e-null-fields-spec/SKILL.md), and [realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md](realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md). Init status and harness coverage are in [platform/init/INIT.md](platform/init/INIT.md).
 <!-- init-agent:end -->

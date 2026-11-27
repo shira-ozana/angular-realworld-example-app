@@ -5,21 +5,23 @@ Status `active` means the hook exists in the repository. Status `proposed` means
 
 | Hook | Status | Trigger | Command | Scope | Failure behavior | Evidence |
 |---|---|---|---|---|---|---|
-| husky-pre-commit | active | pre-commit | `npx lint-staged` | Git staged files | block | `.husky/pre-commit`, `package.json` |
-| pre-push-format-check | proposed | pre-push | `bun run format:check` | Repository TypeScript, HTML, CSS, JSON, and Markdown (excludes realworld/** per package.json script) | block | `.github/workflows/lint.yml`, `package.json` |
-| pre-push-unit-tests | proposed | pre-push | `bun run test` | Vitest unit test suite | block | `package.json` |
-| agent-after-edit-format-check | proposed | agent: after edit | `bun run format:check` | Same glob as format:check in package.json | report | `.github/workflows/lint.yml`, `package.json` |
+| husky-pre-commit | active | pre-commit | `npx lint-staged` | Git staged files (tasks defined outside supplied evidence, likely lint-staged config) | block | `.husky/pre-commit`, `.husky/.gitignore` |
+| pre-push-unit-tests | proposed | pre-push | `bun run test` | Repository root; Vitest unit tests | block | `package.json` |
+| agent-after-edit-format-check | proposed | agent: after edit | `bun run format:check` | TypeScript, HTML, CSS, JSON, and Markdown under repository (excludes realworld/** per script) | report | `package.json`, `.github/workflows/lint.yml` |
+| pre-push-production-build | proposed | pre-push | `bun run build` | Angular application production build (dist/angular-conduit/browser per deploy workflow) | block | `package.json`, `.github/workflows/deploy.yml` |
 
 ## Verification commands
 
 | Command | Purpose | Status | Source |
 |---|---|---|---|
-| `bunx vitest run <path-to-spec>` | Run a single Vitest file or pattern after a localized change | documented | `package.json (test script: vitest)` |
-| `bun run test` | Run full Vitest unit test suite | documented | `package.json` |
-| `bun run format:check` | Verify Prettier formatting without writing files | documented | `.github/workflows/lint.yml, package.json` |
-| `bun run test:coverage` | Unit tests with coverage reporting | documented | `package.json` |
-| `bun run build` | Production Angular build (ng build) | documented | `.github/workflows/deploy.yml, package.json` |
-| `bun run test:e2e` | Playwright E2E tests excluding @security tag | documented | `.github/workflows/playwright.yml, package.json` |
-| `bun run test:e2e:security` | Playwright tests tagged @security | documented | `.github/workflows/security-tests.yml, package.json` |
-| `bun run setup` | Install dependencies (bun install) | documented | `README.md, package.json` |
+| `bun run format` | Auto-fix Prettier formatting on supported globs | documented | `package.json` |
+| `bun run format:check` | CI-aligned Prettier check without writing files | documented | `package.json` |
+| `bun run test` | Run Vitest unit tests | documented | `package.json` |
+| `bun run test:coverage` | Vitest with coverage reporting | documented | `package.json` |
+| `bun run build` | Angular production build | documented | `package.json` |
+| `bun run test:e2e` | Playwright E2E tests excluding @security tag | documented | `package.json` |
+| `bun run test:e2e:security` | Playwright tests tagged @security | documented | `package.json` |
+| `bun install` | Install dependencies via setup script alias | documented | `package.json` |
+| `bun run start` | Local dev server (ng serve) | documented | `README.md` |
+| `bun run setup` | Documented first-time dependency install | documented | `README.md` |
 <!-- init-agent:end -->

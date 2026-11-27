@@ -27,6 +27,7 @@
 - [`realworld/specs/e2e/null-fields.spec.ts`](../../specs/e2e/null-fields.spec.ts)
 - [`realworld/specs/e2e/SELECTORS.md`](../../specs/e2e/SELECTORS.md)
 - [`realworld/specs/e2e/helpers/profile.ts`](../../specs/e2e/helpers/profile.ts)
+- [`realworld/skills/add-e2e-null-fields-spec/SKILL.md`](SKILL.md)
 
 ## Verification
 - bun run test:e2e -- realworld/specs/e2e/null-fields.spec.ts — status: documented

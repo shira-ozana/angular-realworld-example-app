@@ -25,7 +25,7 @@ Parent map: [src/app/AGENTS.md](../AGENTS.md). Repository entry: [AGENTS.md](../
 | Shell UI | `layout/header.component.ts`, `layout/header.component.html` (`.navbar`, `.navbar-brand`, auth nav branches) |
 | Shared types | `auth/user.model.ts`, `models/errors.model.ts`, `models/loading-state.model.ts` |
 | Route guards in templates | `auth/if-authenticated.directive.ts` |
-| External contract | [CONTRACTS.md](../../../CONTRACTS.md) (`Token` scheme); UI selectors and `jwtToken` in `realworld/specs/e2e/SELECTORS.md` |
+| External contract | [CONTRACTS.md](../../../CONTRACTS.md) (`Token` scheme); UI selectors and `jwtToken` in [realworld/specs/e2e/SELECTORS.md](../../../realworld/specs/e2e/SELECTORS.md) |
 
 `GET /user` errors are handled in `UserService` (4XX vs 5XX). Other endpoints rely on `errorInterceptor` to call `purgeAuth()` on 401 (see comments in `user.service.ts` and `error.interceptor.ts`).
 

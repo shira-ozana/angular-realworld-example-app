@@ -34,6 +34,7 @@
 - [`realworld/specs/e2e/helpers/auth.ts`](../../specs/e2e/helpers/auth.ts)
 - [`realworld/specs/e2e/helpers/config.ts`](../../specs/e2e/helpers/config.ts)
 - [`realworld/specs/e2e/SELECTORS.md`](../../specs/e2e/SELECTORS.md)
+- [`realworld/skills/add-e2e-article-crud-spec/SKILL.md`](SKILL.md)
 
 ## Verification
 - bun run test:e2e -- realworld/specs/e2e/articles.spec.ts — status: documented
