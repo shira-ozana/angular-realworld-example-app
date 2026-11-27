@@ -47,9 +47,9 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Rule:** Do not copy `CLAUDE.md`, `realworld/CLAUDE.md`, or `realworld/CONTRIBUTING.md` in full into harness files; link or name them in `code`. Do not contradict their instructions; list conflicts for human review.
 
-**Scope:** Root and local `AGENTS.md`, `RULES.md`, `GUIDELINES.md`.
+**Scope:** Root and local `AGENTS.md`, `RULES.md`, [GUIDELINES.md](GUIDELINES.md).
 
-**Basis:** Init rule R5; `CLAUDE.md`, `realworld/CLAUDE.md`, `realworld/CONTRIBUTING.md`.
+**Basis:** Init rule R5; [CLAUDE.md](CLAUDE.md); `realworld/CLAUDE.md`; `realworld/CONTRIBUTING.md`.
 
 **Check:** Harness sections point to source files with one-line summaries instead of duplicating long passages.
 
@@ -57,13 +57,13 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 ## RULE-05: Match frontend E2E UI contract in SELECTORS.md
 
-**Rule:** SPA changes that affect tests must keep routes, DOM selectors, `localStorage` key `jwtToken`, and `window.__conduit_debug__` (`getToken`, `getAuthState`, `getCurrentUser`) aligned with [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md).
+**Rule:** SPA changes that affect tests must keep routes, DOM selectors, `localStorage` key `jwtToken`, and `window.__conduit_debug__` (`getToken`, `getAuthState`, `getCurrentUser`) aligned with `realworld/specs/e2e/SELECTORS.md`.
 
 **Scope:** `src/app/**`; shared specs under `realworld/specs/e2e/**`.
 
-**Basis:** [CONTRACTS.md](CONTRACTS.md); [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md); E2E specs such as `realworld/specs/e2e/auth.spec.ts` and `realworld/specs/e2e/articles.spec.ts`.
+**Basis:** [CONTRACTS.md](CONTRACTS.md); `realworld/specs/e2e/SELECTORS.md`; E2E specs such as `realworld/specs/e2e/auth.spec.ts` and `realworld/specs/e2e/articles.spec.ts`.
 
-**Check:** Run [skills/run-playwright-e2e-tests/SKILL.md](skills/run-playwright-e2e-tests/SKILL.md): `bun run test:e2e` (status: documented).
+**Check:** `bun run test:e2e` (status: documented; see [TESTING.md](TESTING.md)).
 
 ---
 
@@ -85,9 +85,9 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Scope:** `realworld/specs/e2e/*.spec.ts`.
 
-**Basis:** `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`; [skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md).
+**Basis:** `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`; shared skill `add-e2e-domain-spec`.
 
-**Check:** Code review of new or changed `test.afterEach` blocks; `bun run test:e2e` on touched files (status: documented).
+**Check:** Code review of new or changed `test.afterEach` blocks; `bun run test:e2e` on touched files (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -97,9 +97,9 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Scope:** `src/app/**`.
 
-**Basis:** [src/app/AGENTS.md](src/app/AGENTS.md); [skills/run-vitest-unit-tests/SKILL.md](skills/run-vitest-unit-tests/SKILL.md).
+**Basis:** [src/app/AGENTS.md](src/app/AGENTS.md); Vitest via `package.json` (`bun run test`).
 
-**Check:** `bun run test` (status: documented).
+**Check:** `bun run test` (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -111,7 +111,7 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Basis:** `.husky/pre-commit`; [HOOKS.md](HOOKS.md).
 
-**Check:** Commit triggers hook; on failure fix formatting and re-stage. Manual: `bun run format:check` (status: documented).
+**Check:** Commit triggers hook; on failure fix formatting and re-stage. Manual: `bun run format:check` (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -123,7 +123,7 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Basis:** `realworld/specs/api/hurl-to-bruno.js`; `realworld/.github/workflows/bruno-check.yml`; [realworld/AGENTS.md](realworld/AGENTS.md).
 
-**Check:** [skills/check-bruno-hurl-sync/SKILL.md](skills/check-bruno-hurl-sync/SKILL.md); `bun realworld/specs/api/hurl-to-bruno.js --check` (status: documented).
+**Check:** `bun realworld/specs/api/hurl-to-bruno.js --check` (status: documented; [realworld/AGENTS.md](realworld/AGENTS.md)).
 
 ---
 
@@ -135,7 +135,7 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Basis:** [CONTRACTS.md](CONTRACTS.md); `realworld/specs/api/openapi.yml`; [DOMAIN.md](DOMAIN.md).
 
-**Check:** [skills/run-hurl-api-tests/SKILL.md](skills/run-hurl-api-tests/SKILL.md) or [skills/run-bruno-api-tests/SKILL.md](skills/run-bruno-api-tests/SKILL.md) per [realworld/AGENTS.md](realworld/AGENTS.md) (status: documented).
+**Check:** API runners in `realworld/specs/api/run-api-tests-hurl.sh` and `realworld/specs/api/run-api-tests-bruno.sh` per [realworld/AGENTS.md](realworld/AGENTS.md) (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -145,7 +145,7 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Scope:** `realworld/specs/e2e/**`; root `package.json` scripts.
 
-**Basis:** Root `package.json`; `.github/workflows/security-tests.yml`; [skills/run-playwright-security-e2e-tests/SKILL.md](skills/run-playwright-security-e2e-tests/SKILL.md).
+**Basis:** Root `package.json`; `.github/workflows/security-tests.yml`; [TESTING.md](TESTING.md).
 
 **Check:** `bun run test:e2e:security` (status: documented); default `bun run test:e2e` must not require security-only tags to pass for routine changes.
 
@@ -159,7 +159,7 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Basis:** `realworld/specs/e2e/playwright.base.ts`; [ARCHITECTURE.md](ARCHITECTURE.md).
 
-**Check:** Import of `baseConfig` in `playwright.config.ts`; `bun run test:e2e` (status: documented).
+**Check:** Import of `baseConfig` in `playwright.config.ts`; `bun run test:e2e` (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -181,9 +181,9 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Scope:** `src/app/**`; error and auth flows covered by shared E2E.
 
-**Basis:** [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md); `realworld/specs/e2e/error-handling.spec.ts`; [skills/add-e2e-api-error-test/SKILL.md](skills/add-e2e-api-error-test/SKILL.md).
+**Basis:** `realworld/specs/e2e/SELECTORS.md`; `realworld/specs/e2e/error-handling.spec.ts`; [src/app/features/AGENTS.md](src/app/features/AGENTS.md).
 
-**Check:** `bun run test:e2e` with specs that mock API failures when `BROWSER_API` is true (status: documented).
+**Check:** `bun run test:e2e` with specs that mock API failures when `BROWSER_API` is true (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 
@@ -193,9 +193,45 @@ Human-authored guidance in `CLAUDE.md`, `realworld/CLAUDE.md`, and `realworld/CO
 
 **Scope:** `src/app/**`; `realworld/specs/e2e/articles.spec.ts`; `realworld/specs/e2e/comments.spec.ts`.
 
-**Basis:** [GUIDELINES.md](GUIDELINES.md); [skills/add-spa-route-mock-test/SKILL.md](skills/add-spa-route-mock-test/SKILL.md).
+**Basis:** [GUIDELINES.md](GUIDELINES.md); `realworld/specs/e2e/articles.spec.ts`, `realworld/specs/e2e/comments.spec.ts`.
 
-**Check:** Run relevant E2E with `BROWSER_API` enabled (status: documented).
+**Check:** Run relevant E2E with `BROWSER_API` enabled (status: documented; [TESTING.md](TESTING.md)).
+
+---
+
+## RULE-17: Create git commits only when the user asks
+
+**Rule:** Agents must not run `git commit`, amend, or push unless the user explicitly requests it in the task or a user rule; when committing, follow the repository git safety protocol (no config changes, no destructive git commands unless requested).
+
+**Scope:** All agent-driven git operations.
+
+**Basis:** User rules in session; [AGENTS.md](AGENTS.md) alignment with contributor workflow.
+
+**Check:** No unsolicited commits in agent history; commit messages match change purpose when commits are requested.
+
+---
+
+## RULE-18: Null profile fields must match conformance E2E expectations
+
+**Rule:** When API `image` or `bio` is null, the SPA must show `default-avatar.svg`, empty bio (not the literal string `null`), and correct `/settings` form values, as in `realworld/specs/e2e/null-fields.spec.ts`.
+
+**Scope:** `src/app/**` profile and settings UI; `realworld/specs/e2e/null-fields.spec.ts`.
+
+**Basis:** [realworld/skills/add-e2e-null-fields-spec/SKILL.md](realworld/skills/add-e2e-null-fields-spec/SKILL.md); `realworld/specs/e2e/SELECTORS.md`.
+
+**Check:** `bun run test:e2e -- realworld/specs/e2e/null-fields.spec.ts` (status: documented; path filter inferred; [TESTING.md](TESTING.md)).
+
+---
+
+## RULE-19: Invalid `jwtToken` must clear auth and show public chrome
+
+**Rule:** After `localStorage` key `jwtToken` is set to an invalid value and the page reloads, the SPA must show unauthenticated UI and cleared token state when `BROWSER_API` is true and `window.__conduit_debug__` is available.
+
+**Scope:** `src/app/**` auth persistence; `realworld/specs/e2e/auth.spec.ts`.
+
+**Basis:** [realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md](realworld/skills/add-e2e-spa-invalid-token-spec/SKILL.md); `realworld/specs/e2e/SELECTORS.md`.
+
+**Check:** `bun run test:e2e` including auth specs (status: documented; [TESTING.md](TESTING.md)).
 
 ---
 

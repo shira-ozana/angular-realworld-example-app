@@ -25,11 +25,11 @@ Paths exercised by contract tests and E2E API helpers include:
 - Comments: `GET` / `POST` `/articles/{slug}/comments`, `DELETE` `/articles/{slug}/comments/{id}` (exact path shape: see OpenAPI)
 - Tags: `GET /tags`
 
-Request and response shapes, pagination (`offset`, `limit`, default 20), and wrapper objects (`user`, `article`, `comment`) are defined in [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml). HTTP contract verification uses Bruno or Hurl under `realworld/specs/api` ([realworld/AGENTS.md](realworld/AGENTS.md)); see [skills/run-hurl-api-tests/SKILL.md](skills/run-hurl-api-tests/SKILL.md) and [skills/run-bruno-api-tests/SKILL.md](skills/run-bruno-api-tests/SKILL.md).
+Request and response shapes, pagination (`offset`, `limit`, default 20), and wrapper objects (`user`, `article`, `comment`) are defined in [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml). HTTP contract verification uses Bruno or Hurl under `realworld/specs/api` ([realworld/AGENTS.md](realworld/AGENTS.md)); see skills/run-hurl-api-tests/SKILL.md and skills/run-bruno-api-tests/SKILL.md.
 
 ### E2E API helper contract
 
-[realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) implements the same REST surface for `EXTERNAL_API` setup. Register and login return a token. Authenticated calls send `Authorization: Token …`. Functions such as `registerUserViaAPI`, `loginUserViaAPI`, `createArticleViaAPI`, `updateUserViaAPI`, and `createManyArticles` match OpenAPI JSON shapes. Use this file when adding cross-user or API-seeded scenarios ([skills/add-e2e-domain-spec/SKILL.md](skills/add-e2e-domain-spec/SKILL.md)).
+[realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) implements the same REST surface for `EXTERNAL_API` setup. Register and login return a token. Authenticated calls send `Authorization: Token …`. Functions such as `registerUserViaAPI`, `loginUserViaAPI`, `createArticleViaAPI`, `updateUserViaAPI`, and `createManyArticles` match OpenAPI JSON shapes. Use this file when adding cross-user or API-seeded scenarios (skills/add-e2e-domain-spec/SKILL.md).
 
 ---
 
@@ -53,7 +53,7 @@ Request and response shapes, pagination (`offset`, `limit`, default 20), and wra
 | `/settings` | Current user profile settings |
 | `/profile/:username`, `/profile/:username/favorites` | Profile and favorites list |
 
-E2E specs assert post-login navigation to `/` and editor flows through `/article/:slug`. Run the suite via [skills/run-playwright-e2e-tests/SKILL.md](skills/run-playwright-e2e-tests/SKILL.md). Angular routes in `src/app/app.routes.ts` should match this table.
+E2E specs assert post-login navigation to `/` and editor flows through `/article/:slug`. Run the suite via skills/run-playwright-e2e-tests/SKILL.md. Angular routes in `src/app/app.routes.ts` should match this table.
 
 ### DOM and UX expectations (index)
 
@@ -66,7 +66,7 @@ Implementations must expose selectors and classes referenced in shared tests, in
 - Profile: `.user-info`, `.user-img` (null or empty image → default avatar)
 - Comments: placeholder **Write a comment**, **Post Comment**, author delete in `.mod-options`
 
-Do not duplicate the full selector list here. Treat [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) as authoritative. API error UX is exercised in error-handling specs; see [skills/add-e2e-api-error-test/SKILL.md](skills/add-e2e-api-error-test/SKILL.md).
+Do not duplicate the full selector list here. Treat [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) as authoritative. API error UX is exercised in error-handling specs; see skills/add-e2e-api-error-test/SKILL.md.
 
 ### Browser session and debug
 
@@ -86,13 +86,13 @@ Shared E2E behavior depends on flags from `realworld/specs/e2e/helpers/config.ts
 | `BROWSER_API` | UI HTTP client tests (`page.route`), debug helpers, error-handling against mocked responses |
 | `EXTERNAL_API` | Live API setup via [realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts); health checks against `/tags` |
 
-Patterns are summarized in [GUIDELINES.md](GUIDELINES.md). Navigation and social flows that branch on these flags are covered by [skills/add-e2e-navigation-social-spec/SKILL.md](skills/add-e2e-navigation-social-spec/SKILL.md). Security-only UI contracts use specs tagged `@security` ([skills/run-playwright-security-e2e-tests/SKILL.md](skills/run-playwright-security-e2e-tests/SKILL.md)).
+Patterns are summarized in [GUIDELINES.md](GUIDELINES.md). Navigation and social flows that branch on these flags are covered by skills/add-e2e-navigation-social-spec/SKILL.md. Security-only UI contracts use specs tagged `@security` (skills/run-playwright-security-e2e-tests/SKILL.md).
 
 ---
 
 ## Client HTTP semantics (SPA-only)
 
-Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for example `200` with an empty JSON body) as success, not only `204`. See [skills/add-spa-route-mock-test/SKILL.md](skills/add-spa-route-mock-test/SKILL.md).
+Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for example `200` with an empty JSON body) as success, not only `204`. See skills/add-spa-route-mock-test/SKILL.md.
 
 ---
 
@@ -103,7 +103,7 @@ Under `BROWSER_API`, DELETE on articles or comments must treat **any 2xx** (for 
 | REST OpenAPI | [realworld/specs/api/openapi.yml](realworld/specs/api/openapi.yml) |
 | UI routes and selectors | [realworld/specs/e2e/SELECTORS.md](realworld/specs/e2e/SELECTORS.md) |
 | REST helpers for tests | [realworld/specs/e2e/helpers/api.ts](realworld/specs/e2e/helpers/api.ts) |
-| Bruno sync with Hurl | [skills/check-bruno-hurl-sync/SKILL.md](skills/check-bruno-hurl-sync/SKILL.md) |
+| Bruno sync with Hurl | skills/check-bruno-hurl-sync/SKILL.md |
 
 ---
 
